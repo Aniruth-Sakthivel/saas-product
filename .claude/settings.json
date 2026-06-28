@@ -1,0 +1,12 @@
+{
+  "permissions": {
+    "allow": [
+      "Bash(node -c site/assets/site.js)",
+      "Bash(npm -v)",
+      "Bash(npm install *)",
+      "Bash(cd /d/Github/hotel-demo/app-next && ls node_modules >/dev/null 2>&1 && echo \"node_modules present\" || echo \"not yet\"; cat /c/Users/aniru/AppData/Local/Temp/claude/d--Github-hotel-demo/6b709b17-8c42-41ce-9926-51450995835c/tasks/b7fqrr4bc.output 2>/dev/null | tail -8)",
+      "Read(//c/Users/aniru/AppData/Local/Temp/claude/d--Github-hotel-demo/6b709b17-8c42-41ce-9926-51450995835c/tasks/**)",
+      "Bash(npm rebuild *)"
+    ]
+  }
+}

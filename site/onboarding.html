@@ -1,0 +1,101 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Onboarding · HotelOS</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <script>tailwind.config={theme:{extend:{fontFamily:{sans:['Inter','ui-sans-serif']}}}}</script>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+  <script src="https://unpkg.com/lucide@latest"></script>
+  <style>body{font-family:'Inter',sans-serif}.size-4\.5{width:1.125rem;height:1.125rem}
+    @keyframes hos-up{from{opacity:0;transform:translateY(14px)}to{opacity:1;transform:none}}
+    @keyframes hos-pop{0%{opacity:0;transform:scale(.9)}60%{transform:scale(1.05)}100%{opacity:1;transform:scale(1)}}
+    .anim-up{animation:hos-up .45s cubic-bezier(.22,.8,.18,1) both}
+    .anim-pop{animation:hos-pop .5s cubic-bezier(.22,.8,.18,1) both}
+    a,button,input,span{transition:all .2s ease}
+    @media(prefers-reduced-motion:reduce){.anim-up,.anim-pop{animation:none!important;opacity:1!important}}</style>
+</head>
+<body class="bg-[#FAFAFA] text-gray-900 antialiased">
+  <header class="border-b border-gray-200 bg-white">
+    <div class="mx-auto flex h-16 max-w-3xl items-center gap-2 px-5"><span class="grid size-8 place-items-center rounded-lg bg-gradient-to-br from-indigo-600 to-violet-600 text-white"><i data-lucide="hotel" class="size-4.5"></i></span><span class="text-[17px] font-semibold tracking-tight">HotelOS</span><span class="ml-auto text-sm text-gray-400">Need help? <a href="contact.html" class="font-medium text-indigo-600">Contact us</a></span></div>
+  </header>
+
+  <main class="mx-auto max-w-3xl px-5 py-10">
+    <!-- Stepper -->
+    <div id="stepper" class="mb-10"></div>
+    <div id="card" class="rounded-2xl border border-gray-200 bg-white p-7 shadow-sm sm:p-9"></div>
+  </main>
+
+  <script>
+    const inp=`class="w-full rounded-xl border border-gray-200 px-3.5 py-2.5 text-sm focus:border-indigo-500 focus:outline-none focus:ring-2 focus:ring-indigo-100"`;
+    const f=(l,el)=>`<label class="block"><span class="mb-1.5 block text-sm font-medium text-gray-700">${l}</span>${el}</label>`;
+    const steps=["Hotel Info","Property Setup","Branding","Invite Team","Done"];
+    let step=0;
+
+    function stepper(){
+      return `<ol class="flex items-center">${steps.map((s,i)=>{
+        const done=i<step, active=i===step;
+        return `<li class="flex items-center ${i<steps.length-1?'flex-1':''}">
+          <div class="flex flex-col items-center">
+            <span class="grid size-9 place-items-center rounded-full text-sm font-semibold transition ${done?'bg-indigo-600 text-white':active?'bg-indigo-600 text-white ring-4 ring-indigo-100':'bg-gray-100 text-gray-400'}">${done?'<i data-lucide="check" class="size-4"></i>':i+1}</span>
+            <span class="mt-2 hidden text-xs font-medium sm:block ${active?'text-gray-900':'text-gray-400'}">${s}</span>
+          </div>
+          ${i<steps.length-1?`<span class="mx-2 h-0.5 flex-1 rounded ${done?'bg-indigo-600':'bg-gray-200'}"></span>`:''}
+        </li>`;}).join("")}</ol>`;
+    }
+
+    function nav(back=true,nextLabel="Continue"){
+      return `<div class="mt-8 flex items-center justify-between border-t border-gray-100 pt-6">
+        ${back?`<button onclick="go(-1)" class="rounded-xl border border-gray-200 px-4 py-2.5 text-sm font-medium text-gray-700 hover:bg-gray-50">Back</button>`:'<span></span>'}
+        <button onclick="go(1)" class="rounded-xl bg-gradient-to-br from-indigo-600 to-violet-600 px-5 py-2.5 text-sm font-semibold text-white transition hover:opacity-95">${nextLabel}</button>
+      </div>`;
+    }
+
+    function body(){
+      switch(step){
+        case 0: return `<h2 class="text-xl font-semibold">Tell us about your hotel</h2><p class="mt-1 text-sm text-gray-500">We'll personalize HotelOS for your property.</p>
+          <div class="mt-6 space-y-4">${f("Hotel name",`<input ${inp} value="Grand Marina Hotel"/>`)}
+          ${f("Hotel type",`<select ${inp}><option>City Hotel</option><option>Resort</option><option>Boutique Stay</option><option>Hostel</option><option>Serviced Apartments</option></select>`)}
+          ${f("Address",`<input ${inp} placeholder="120 Harbor View Blvd, Miami, FL"/>`)}</div>${nav(false)}`;
+        case 1: return `<h2 class="text-xl font-semibold">Property setup</h2><p class="mt-1 text-sm text-gray-500">Configure your rooms and locale.</p>
+          <div class="mt-6 grid grid-cols-2 gap-4">${f("Number of rooms",`<input type="number" ${inp} value="50"/>`)}${f("Floors",`<input type="number" ${inp} value="5"/>`)}
+          ${f("Currency",`<select ${inp}><option>USD ($)</option><option>EUR (€)</option><option>GBP (£)</option><option>INR (₹)</option></select>`)}
+          ${f("Timezone",`<select ${inp}><option>(GMT-05:00) Eastern</option><option>(GMT+00:00) UTC</option><option>(GMT+05:30) IST</option></select>`)}</div>${nav()}`;
+        case 2: return `<h2 class="text-xl font-semibold">Branding</h2><p class="mt-1 text-sm text-gray-500">Make HotelOS feel like your hotel.</p>
+          <div class="mt-6 space-y-6">
+            <div><span class="mb-1.5 block text-sm font-medium text-gray-700">Hotel logo</span>
+              <div class="flex items-center gap-4"><span class="grid size-16 place-items-center rounded-2xl border-2 border-dashed border-gray-300 text-gray-300"><i data-lucide="image" class="size-6"></i></span>
+              <button class="rounded-xl border border-gray-200 px-4 py-2 text-sm font-medium hover:bg-gray-50"><i data-lucide="upload" class="mr-1.5 inline size-4"></i>Upload logo</button></div></div>
+            <div><span class="mb-2 block text-sm font-medium text-gray-700">Primary brand color</span>
+              <div class="flex gap-2" id="colors"></div></div>
+          </div>${nav()}`;
+        case 3: return `<h2 class="text-xl font-semibold">Invite your team</h2><p class="mt-1 text-sm text-gray-500">Add colleagues so they can hit the ground running.</p>
+          <div class="mt-6 space-y-3">${["Manager","Receptionist","Housekeeping Staff"].map(r=>`<div class="flex items-center gap-3"><input ${inp} placeholder="name@hotel.com"/><span class="w-40 shrink-0 rounded-xl bg-gray-100 px-3 py-2.5 text-center text-sm text-gray-600">${r}</span></div>`).join("")}
+          <button class="flex items-center gap-1.5 text-sm font-medium text-indigo-600"><i data-lucide="plus" class="size-4"></i>Add another</button></div>${nav(true,"Finish setup")}`;
+        case 4: return `<div class="py-8 text-center">
+            <span class="anim-pop mx-auto grid size-20 place-items-center rounded-full bg-emerald-50 text-emerald-600"><i data-lucide="party-popper" class="size-9"></i></span>
+            <h2 class="mt-6 text-2xl font-semibold">You're all set! 🎉</h2>
+            <p class="mx-auto mt-2 max-w-md text-gray-500">Grand Marina Hotel is ready on HotelOS. Your workspace, rooms, and team are configured.</p>
+            <div class="mx-auto mt-6 grid max-w-sm grid-cols-3 gap-3">${[["50","Rooms"],["5","Floors"],["3","Invites"]].map(([v,l])=>`<div class="rounded-xl border border-gray-200 p-3"><p class="text-lg font-semibold">${v}</p><p class="text-xs text-gray-400">${l}</p></div>`).join("")}</div>
+            <a href="../index.html" class="mt-8 inline-flex items-center gap-2 rounded-xl bg-gradient-to-br from-indigo-600 to-violet-600 px-6 py-3 text-sm font-semibold text-white transition hover:opacity-95">Go to Dashboard <i data-lucide="arrow-right" class="size-4"></i></a>
+          </div>`;
+      }
+    }
+
+    function render(){
+      document.getElementById("stepper").innerHTML = stepper();
+      const card=document.getElementById("card");
+      card.innerHTML = body();
+      card.classList.remove("anim-up"); void card.offsetWidth; card.classList.add("anim-up");
+      if(step===2){
+        const colors=["#4F46E5","#059669","#DC2626","#F59E0B","#8B5CF6","#0EA5E9","#EC4899","#111827"];
+        document.getElementById("colors").innerHTML = colors.map((c,i)=>`<button onclick="document.querySelectorAll('#colors button').forEach(b=>b.classList.remove('ring-2','ring-offset-2','ring-gray-900'));this.classList.add('ring-2','ring-offset-2','ring-gray-900')" class="size-9 rounded-full ${i===0?'ring-2 ring-offset-2 ring-gray-900':''}" style="background:${c}"></button>`).join("");
+      }
+      lucide.createIcons();
+    }
+    window.go=(d)=>{step=Math.max(0,Math.min(steps.length-1,step+d));render();window.scrollTo({top:0,behavior:'smooth'});};
+    render();
+  </script>
+</body>
+</html>

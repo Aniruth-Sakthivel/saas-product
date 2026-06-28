@@ -1,0 +1,337 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>HotelOS — Modern Hotel Management Software</title>
+  <meta name="description" content="Manage reservations, front desk, housekeeping, billing, and guest experience from one platform." />
+  <script src="https://cdn.tailwindcss.com"></script>
+  <script>tailwind.config={theme:{extend:{fontFamily:{sans:['Inter','ui-sans-serif','system-ui']}}}}</script>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+  <script src="https://unpkg.com/lucide@latest"></script>
+  <style>body{font-family:'Inter',sans-serif}::-webkit-scrollbar{width:9px;height:9px}::-webkit-scrollbar-thumb{background:#E5E7EB;border-radius:9px}.size-4\.5{width:1.125rem;height:1.125rem}html{scroll-behavior:smooth}</style>
+</head>
+<body class="bg-[#FAFAFA] text-gray-900 antialiased">
+  <div id="navbar"></div>
+
+  <!-- HERO -->
+  <section class="relative overflow-hidden">
+    <div class="pointer-events-none absolute inset-0 -z-10">
+      <div class="animate-blob absolute left-1/2 top-[-10rem] size-[40rem] -translate-x-1/2 rounded-full bg-gradient-to-br from-indigo-200/50 to-violet-200/40 blur-3xl"></div>
+    </div>
+    <div class="mx-auto max-w-7xl px-5 pb-10 pt-16 text-center sm:px-8 sm:pt-24">
+      <div class="flex justify-center" id="heroBadge"></div>
+      <h1 class="mx-auto mt-6 max-w-4xl text-4xl font-semibold leading-[1.1] tracking-tight text-gray-900 sm:text-6xl">
+        Modern Hotel Management<br class="hidden sm:block"> Software for <span class="bg-gradient-to-br from-indigo-600 to-violet-600 bg-clip-text text-transparent">Growing Hotels</span>
+      </h1>
+      <p class="mx-auto mt-6 max-w-2xl text-lg leading-relaxed text-gray-500">
+        Manage reservations, front desk, housekeeping, billing, and guest experience from one beautiful platform.
+      </p>
+      <div class="mt-8 flex flex-col items-center justify-center gap-3 sm:flex-row">
+        <a href="signup.html" class="flex w-full items-center justify-center gap-2 rounded-xl bg-gradient-to-br from-indigo-600 to-violet-600 px-6 py-3 text-sm font-semibold text-white shadow-lg shadow-indigo-600/20 transition hover:opacity-95 sm:w-auto">Start Free Trial <i data-lucide="arrow-right" class="size-4"></i></a>
+        <a href="contact.html" class="flex w-full items-center justify-center gap-2 rounded-xl border border-gray-200 bg-white px-6 py-3 text-sm font-semibold text-gray-800 shadow-sm transition hover:bg-gray-50 sm:w-auto"><i data-lucide="play-circle" class="size-4"></i> Book Demo</a>
+      </div>
+      <p class="mt-4 text-sm text-gray-400">14-day free trial · No credit card required</p>
+
+      <!-- Dashboard mockup -->
+      <div class="relative mx-auto mt-14 max-w-5xl">
+        <div class="animate-float absolute -left-6 top-16 z-10 hidden w-48 rounded-2xl border border-gray-200 bg-white p-4 shadow-xl lg:block">
+          <p class="text-xs text-gray-400">Occupancy today</p><p class="mt-1 text-2xl font-semibold">87%</p>
+          <p class="mt-1 flex items-center gap-1 text-xs font-medium text-emerald-600"><i data-lucide="trending-up" class="size-3"></i>+12% this week</p>
+        </div>
+        <div class="animate-float-slow absolute -right-6 top-40 z-10 hidden w-48 rounded-2xl border border-gray-200 bg-white p-4 shadow-xl lg:block">
+          <p class="text-xs text-gray-400">Revenue today</p><p class="mt-1 text-2xl font-semibold">$41,280</p>
+          <p class="mt-1 flex items-center gap-1 text-xs font-medium text-emerald-600"><i data-lucide="trending-up" class="size-3"></i>+8.4%</p>
+        </div>
+        <div class="overflow-hidden rounded-2xl border border-gray-200 bg-white shadow-2xl">
+          <div class="flex items-center gap-1.5 border-b border-gray-100 bg-gray-50 px-4 py-3">
+            <span class="size-3 rounded-full bg-red-400"></span><span class="size-3 rounded-full bg-amber-400"></span><span class="size-3 rounded-full bg-emerald-400"></span>
+            <span class="ml-3 rounded-md bg-white px-3 py-1 text-xs text-gray-400 ring-1 ring-gray-200">app.hotelos.com/dashboard</span>
+          </div>
+          <div class="grid grid-cols-12">
+            <aside class="col-span-3 hidden border-r border-gray-100 p-4 sm:block">
+              <div class="space-y-1.5">
+                <div class="flex items-center gap-2.5 rounded-lg bg-indigo-50 px-3 py-2 text-sm font-medium text-indigo-700"><i data-lucide="layout-dashboard" class="size-4"></i>Dashboard</div>
+                <div class="flex items-center gap-2.5 rounded-lg px-3 py-2 text-sm text-gray-500"><i data-lucide="calendar-check" class="size-4"></i>Reservations</div>
+                <div class="flex items-center gap-2.5 rounded-lg px-3 py-2 text-sm text-gray-500"><i data-lucide="bed-double" class="size-4"></i>Rooms</div>
+                <div class="flex items-center gap-2.5 rounded-lg px-3 py-2 text-sm text-gray-500"><i data-lucide="sparkles" class="size-4"></i>Housekeeping</div>
+                <div class="flex items-center gap-2.5 rounded-lg px-3 py-2 text-sm text-gray-500"><i data-lucide="receipt" class="size-4"></i>Billing</div>
+              </div>
+            </aside>
+            <div class="col-span-12 p-5 text-left sm:col-span-9">
+              <div class="grid grid-cols-2 gap-3 lg:grid-cols-4">
+                <div class="rounded-xl border border-gray-100 bg-gray-50/60 p-3"><p class="text-xs text-gray-400">Occupancy</p><p class="mt-1 text-lg font-semibold">87%</p></div>
+                <div class="rounded-xl border border-gray-100 bg-gray-50/60 p-3"><p class="text-xs text-gray-400">Revenue</p><p class="mt-1 text-lg font-semibold">$41.2k</p></div>
+                <div class="rounded-xl border border-gray-100 bg-gray-50/60 p-3"><p class="text-xs text-gray-400">Arrivals</p><p class="mt-1 text-lg font-semibold">14</p></div>
+                <div class="rounded-xl border border-gray-100 bg-gray-50/60 p-3"><p class="text-xs text-gray-400">Departures</p><p class="mt-1 text-lg font-semibold">9</p></div>
+              </div>
+              <div class="mt-4 rounded-xl border border-gray-100 p-4">
+                <div class="flex items-center justify-between"><p class="text-sm font-medium text-gray-700">Revenue trend</p><span class="text-xs text-gray-400">Last 16 days</span></div>
+                <div class="mt-3 flex h-24 items-end gap-1.5">
+                  <div class="chart-bar flex-1 origin-bottom rounded-t bg-gradient-to-t from-indigo-600 to-violet-500" style="height:40%;animation-delay:.02s"></div>
+                  <div class="chart-bar flex-1 origin-bottom rounded-t bg-gradient-to-t from-indigo-600 to-violet-500" style="height:55%;animation-delay:.05s"></div>
+                  <div class="chart-bar flex-1 origin-bottom rounded-t bg-gradient-to-t from-indigo-600 to-violet-500" style="height:48%;animation-delay:.08s"></div>
+                  <div class="chart-bar flex-1 origin-bottom rounded-t bg-gradient-to-t from-indigo-600 to-violet-500" style="height:62%;animation-delay:.11s"></div>
+                  <div class="chart-bar flex-1 origin-bottom rounded-t bg-gradient-to-t from-indigo-600 to-violet-500" style="height:70%;animation-delay:.14s"></div>
+                  <div class="chart-bar flex-1 origin-bottom rounded-t bg-gradient-to-t from-indigo-600 to-violet-500" style="height:66%;animation-delay:.17s"></div>
+                  <div class="chart-bar flex-1 origin-bottom rounded-t bg-gradient-to-t from-indigo-600 to-violet-500" style="height:78%;animation-delay:.2s"></div>
+                  <div class="chart-bar flex-1 origin-bottom rounded-t bg-gradient-to-t from-indigo-600 to-violet-500" style="height:84%;animation-delay:.23s"></div>
+                  <div class="chart-bar flex-1 origin-bottom rounded-t bg-gradient-to-t from-indigo-600 to-violet-500" style="height:76%;animation-delay:.26s"></div>
+                  <div class="chart-bar flex-1 origin-bottom rounded-t bg-gradient-to-t from-indigo-600 to-violet-500" style="height:90%;animation-delay:.29s"></div>
+                  <div class="chart-bar flex-1 origin-bottom rounded-t bg-gradient-to-t from-indigo-600 to-violet-500" style="height:95%;animation-delay:.32s"></div>
+                  <div class="chart-bar flex-1 origin-bottom rounded-t bg-gradient-to-t from-indigo-600 to-violet-500" style="height:88%;animation-delay:.35s"></div>
+                  <div class="chart-bar flex-1 origin-bottom rounded-t bg-gradient-to-t from-indigo-600 to-violet-500" style="height:100%;animation-delay:.38s"></div>
+                  <div class="chart-bar flex-1 origin-bottom rounded-t bg-gradient-to-t from-indigo-600 to-violet-500" style="height:92%;animation-delay:.41s"></div>
+                  <div class="chart-bar flex-1 origin-bottom rounded-t bg-gradient-to-t from-indigo-600 to-violet-500" style="height:98%;animation-delay:.44s"></div>
+                  <div class="chart-bar flex-1 origin-bottom rounded-t bg-gradient-to-t from-indigo-600 to-violet-500" style="height:100%;animation-delay:.47s"></div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- TRUSTED BY -->
+  <section class="border-y border-gray-100 bg-white py-12">
+    <div class="mx-auto max-w-7xl px-5 sm:px-8">
+      <p class="text-center text-sm font-medium text-gray-400">Trusted by hotels, resorts, and boutique stays</p>
+      <div class="mt-8 grid grid-cols-2 items-center gap-x-8 gap-y-6 sm:grid-cols-3 lg:grid-cols-6">
+        <div class="flex items-center justify-center gap-2 text-gray-400 grayscale transition hover:text-gray-700 hover:grayscale-0"><i data-lucide="building-2" class="size-5"></i><span class="text-base font-semibold tracking-tight">Marina Bay</span></div>
+        <div class="flex items-center justify-center gap-2 text-gray-400 grayscale transition hover:text-gray-700 hover:grayscale-0"><i data-lucide="building-2" class="size-5"></i><span class="text-base font-semibold tracking-tight">Azure Resorts</span></div>
+        <div class="flex items-center justify-center gap-2 text-gray-400 grayscale transition hover:text-gray-700 hover:grayscale-0"><i data-lucide="building-2" class="size-5"></i><span class="text-base font-semibold tracking-tight">The Lumière</span></div>
+        <div class="flex items-center justify-center gap-2 text-gray-400 grayscale transition hover:text-gray-700 hover:grayscale-0"><i data-lucide="building-2" class="size-5"></i><span class="text-base font-semibold tracking-tight">Cedar &amp; Pine</span></div>
+        <div class="flex items-center justify-center gap-2 text-gray-400 grayscale transition hover:text-gray-700 hover:grayscale-0"><i data-lucide="building-2" class="size-5"></i><span class="text-base font-semibold tracking-tight">Solstice Stays</span></div>
+        <div class="flex items-center justify-center gap-2 text-gray-400 grayscale transition hover:text-gray-700 hover:grayscale-0"><i data-lucide="building-2" class="size-5"></i><span class="text-base font-semibold tracking-tight">Harborview</span></div>
+      </div>
+    </div>
+  </section>
+
+  <!-- FEATURES GRID -->
+  <section class="py-20 sm:py-28">
+    <div class="mx-auto max-w-7xl px-5 sm:px-8">
+      <div id="featHead"></div>
+      <div class="mt-14 grid grid-cols-1 gap-5 sm:grid-cols-2 lg:grid-cols-4">
+        <div id="featGrid" class="contents"></div>
+      </div>
+    </div>
+  </section>
+
+  <!-- PRODUCT SCREENSHOTS -->
+  <section class="bg-white py-20 sm:py-28">
+    <div class="mx-auto max-w-7xl px-5 sm:px-8">
+      <div id="shotHead"></div>
+      <div class="mt-14 grid grid-cols-1 gap-6 lg:grid-cols-2">
+        <div id="shots" class="contents"></div>
+      </div>
+    </div>
+  </section>
+
+  <!-- BENEFITS -->
+  <section class="py-20 sm:py-28">
+    <div class="mx-auto max-w-7xl px-5 sm:px-8">
+      <div class="grid grid-cols-1 items-center gap-12 lg:grid-cols-2">
+        <div>
+          <p class="text-sm font-semibold text-indigo-600">Why HotelOS</p>
+          <h2 class="mt-2 text-3xl font-semibold tracking-tight sm:text-4xl">Everything your property needs to run smoothly</h2>
+          <p class="mt-4 text-lg text-gray-500">Replace spreadsheets and disconnected tools with one elegant system built for hospitality.</p>
+          <div class="mt-8 space-y-5" id="benefits"></div>
+        </div>
+        <div class="relative">
+          <div class="rounded-2xl border border-gray-200 bg-white p-6 shadow-xl">
+            <div class="flex items-center justify-between"><p class="text-sm font-semibold">Operations overview</p><span class="rounded-full bg-emerald-50 px-2 py-0.5 text-xs font-medium text-emerald-700">Live</span></div>
+            <div class="mt-5 space-y-4">
+              <div><div class="mb-1.5 flex justify-between text-sm"><span class="text-gray-500">Occupancy rate</span><span class="font-semibold">87%</span></div><div class="h-2 rounded-full bg-gray-100"><div class="h-2 rounded-full" style="width:94%;background:#4F46E5"></div></div></div>
+              <div><div class="mb-1.5 flex justify-between text-sm"><span class="text-gray-500">Guest satisfaction</span><span class="font-semibold">96%</span></div><div class="h-2 rounded-full bg-gray-100"><div class="h-2 rounded-full" style="width:98%;background:#059669"></div></div></div>
+              <div><div class="mb-1.5 flex justify-between text-sm"><span class="text-gray-500">Operational efficiency</span><span class="font-semibold">78%</span></div><div class="h-2 rounded-full bg-gray-100"><div class="h-2 rounded-full" style="width:82%;background:#8B5CF6"></div></div></div>
+            </div>
+            <div class="mt-6 grid grid-cols-3 gap-3 border-t border-gray-100 pt-5 text-center">
+              <div><p class="text-xl font-semibold">+32%</p><p class="text-xs text-gray-400">Occupancy</p></div>
+              <div><p class="text-xl font-semibold">−18h</p><p class="text-xs text-gray-400">Manual work/wk</p></div>
+              <div><p class="text-xl font-semibold">4.9★</p><p class="text-xs text-gray-400">Guest rating</p></div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- AI SECTION -->
+  <section class="bg-white py-20 sm:py-28">
+    <div class="mx-auto max-w-7xl px-5 sm:px-8">
+      <div class="grid grid-cols-1 items-center gap-12 lg:grid-cols-2">
+        <div class="order-2 lg:order-1">
+          <div class="rounded-2xl border border-gray-200 bg-gradient-to-b from-gray-50 to-white p-5 shadow-xl">
+            <div class="flex items-center gap-2 border-b border-gray-100 pb-3">
+              <span class="grid size-8 place-items-center rounded-lg bg-gradient-to-br from-indigo-600 to-violet-600 text-white"><i data-lucide="sparkles" class="size-4"></i></span>
+              <p class="text-sm font-semibold">HotelOS Assistant</p><span class="ml-auto flex items-center gap-1 text-xs text-emerald-600"><span class="size-1.5 rounded-full bg-emerald-500"></span>Online</span>
+            </div>
+            <div class="space-y-4 py-4" id="aiChat"></div>
+            <div class="flex items-center gap-2 rounded-xl border border-gray-200 bg-white px-3 py-2.5">
+              <input placeholder="Ask anything about your property…" class="flex-1 bg-transparent text-sm focus:outline-none" />
+              <button class="grid size-8 place-items-center rounded-lg bg-indigo-600 text-white"><i data-lucide="arrow-up" class="size-4"></i></button>
+            </div>
+          </div>
+        </div>
+        <div class="order-1 lg:order-2">
+          <div id="aiBadge"></div>
+          <h2 class="mt-4 text-3xl font-semibold tracking-tight sm:text-4xl">Your AI operations assistant</h2>
+          <p class="mt-4 text-lg text-gray-500">Ask questions in plain language and get instant answers from your live property data — no reports to build.</p>
+          <ul class="mt-6 space-y-3">
+            <li class="flex items-center gap-3 rounded-xl border border-gray-200 bg-white px-4 py-3 text-sm text-gray-700 transition hover:border-indigo-200 hover:shadow-sm"><i data-lucide="message-circle" class="size-4 text-indigo-500"></i>"How many rooms are vacant tomorrow?"</li>
+            <li class="flex items-center gap-3 rounded-xl border border-gray-200 bg-white px-4 py-3 text-sm text-gray-700 transition hover:border-indigo-200 hover:shadow-sm"><i data-lucide="message-circle" class="size-4 text-indigo-500"></i>"Show pending payments."</li>
+            <li class="flex items-center gap-3 rounded-xl border border-gray-200 bg-white px-4 py-3 text-sm text-gray-700 transition hover:border-indigo-200 hover:shadow-sm"><i data-lucide="message-circle" class="size-4 text-indigo-500"></i>"Which rooms generate the most revenue?"</li>
+          </ul>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- TESTIMONIALS -->
+  <section id="testimonials" class="py-20 sm:py-28">
+    <div class="mx-auto max-w-7xl px-5 sm:px-8">
+      <div id="testHead"></div>
+      <div class="mt-14 grid grid-cols-1 gap-6 md:grid-cols-3" id="testGrid"></div>
+    </div>
+  </section>
+
+  <!-- PRICING -->
+  <section class="bg-white py-20 sm:py-28">
+    <div class="mx-auto max-w-7xl px-5 sm:px-8">
+      <div id="priceHead"></div>
+      <div class="mt-14 grid grid-cols-1 gap-6 lg:grid-cols-3" id="priceGrid"></div>
+      <p class="mt-8 text-center text-sm text-gray-400">Need a tailored plan? <a href="contact.html" class="font-medium text-indigo-600 hover:underline">Talk to sales →</a></p>
+    </div>
+  </section>
+
+  <!-- FAQ -->
+  <section class="py-20 sm:py-28">
+    <div class="mx-auto max-w-3xl px-5 sm:px-8">
+      <div id="faqHead"></div>
+      <div class="mt-12 space-y-3" id="faqList"></div>
+    </div>
+  </section>
+
+  <!-- FINAL CTA -->
+  <section class="px-5 pb-24 sm:px-8">
+    <div class="mx-auto max-w-7xl overflow-hidden rounded-3xl bg-gradient-to-br from-indigo-600 to-violet-600 px-6 py-16 text-center shadow-2xl shadow-indigo-600/20 sm:py-20">
+      <h2 class="mx-auto max-w-2xl text-3xl font-semibold tracking-tight text-white sm:text-4xl">Ready to modernize your hotel operations?</h2>
+      <p class="mx-auto mt-4 max-w-xl text-lg text-indigo-100">Join hundreds of properties running smarter with HotelOS.</p>
+      <div class="mt-8 flex flex-col items-center justify-center gap-3 sm:flex-row">
+        <a href="signup.html" class="w-full rounded-xl bg-white px-6 py-3 text-sm font-semibold text-indigo-700 shadow-sm transition hover:bg-gray-50 sm:w-auto">Start Free Trial</a>
+        <a href="contact.html" class="w-full rounded-xl border border-white/30 px-6 py-3 text-sm font-semibold text-white transition hover:bg-white/10 sm:w-auto">Book Demo</a>
+      </div>
+    </div>
+  </section>
+
+  <div id="footer"></div>
+
+  <script src="assets/site.js"></script>
+  <script>
+    const S = window.SITE;
+    document.getElementById("heroBadge").innerHTML = S.badge("New · AI Assistant for hotels","sparkles");
+    document.getElementById("aiBadge").innerHTML = S.badge("AI-powered","sparkles");
+
+    document.getElementById("featHead").innerHTML = S.sectionHead({eyebrow:"Features",title:"One platform for your entire property",sub:"From the front desk to the back office, every tool your team needs in a single, elegant workspace."});
+    const features=[
+      ["calendar-check","Reservations","Centralized bookings across every channel with real-time availability."],
+      ["concierge-bell","Front Desk","Lightning-fast check-in, check-out, and walk-in management."],
+      ["sparkles","Housekeeping","Assign, track, and inspect room tasks on a live board."],
+      ["receipt","Billing","Invoices, payments, and revenue tracking with GST support."],
+      ["users","Guest CRM","Rich guest profiles, stay history, and preferences."],
+      ["bar-chart-3","Reports","Beautiful analytics on occupancy, revenue, and performance."],
+      ["brain-circuit","AI Insights","Predictive occupancy and pricing recommendations."],
+      ["message-circle","WhatsApp Automation","Automated confirmations, reminders, and guest messaging."],
+    ];
+    document.getElementById("featGrid").innerHTML = features.map(([i,t,d])=>`
+      <div class="group rounded-2xl border border-gray-200 bg-white p-6 shadow-sm transition hover:-translate-y-0.5 hover:shadow-lg">
+        <span class="grid size-11 place-items-center rounded-xl bg-indigo-50 text-indigo-600 transition group-hover:bg-indigo-600 group-hover:text-white"><i data-lucide="${i}" class="size-5"></i></span>
+        <h3 class="mt-4 text-base font-semibold text-gray-900">${t}</h3>
+        <p class="mt-1.5 text-sm leading-relaxed text-gray-500">${d}</p>
+      </div>`).join("");
+
+    document.getElementById("shotHead").innerHTML = S.sectionHead({eyebrow:"Product tour",title:"Designed to feel effortless",sub:"A premium interface your staff will actually love using."});
+    const shots=[
+      ["Dashboard","Real-time KPIs at a glance","#4F46E5",["Occupancy 87%","Revenue $41.2k","14 arrivals"]],
+      ["Reservations","Manage every booking","#8B5CF6",["Confirmed","Checked-in","Pending"]],
+      ["Room Management","Visual room status board","#059669",["Available","Occupied","Cleaning"]],
+      ["Housekeeping","Live task tracking","#F59E0B",["Pending","In progress","Completed"]],
+    ];
+    document.getElementById("shots").innerHTML = shots.map(([t,d,c,chips])=>`
+      <div class="overflow-hidden rounded-2xl border border-gray-200 bg-white shadow-sm">
+        <div class="flex items-center justify-between border-b border-gray-100 px-5 py-4"><div><h3 class="text-base font-semibold">${t}</h3><p class="text-sm text-gray-400">${d}</p></div><span class="size-9 rounded-lg" style="background:${c}1a"><i data-lucide="layout-dashboard" class="m-2.5 size-4" style="color:${c}"></i></span></div>
+        <div class="space-y-3 bg-gray-50/60 p-5">
+          <div class="flex gap-2">${chips.map(ch=>`<span class="rounded-lg bg-white px-2.5 py-1 text-xs font-medium text-gray-600 ring-1 ring-gray-200">${ch}</span>`).join("")}</div>
+          <div class="grid grid-cols-3 gap-2">${[...Array(6)].map((_,i)=>`<div class="rounded-xl bg-white p-3 ring-1 ring-gray-100"><div class="h-2 w-2/3 rounded bg-gray-200"></div><div class="mt-2 h-4 w-1/2 rounded" style="background:${c}33"></div></div>`).join("")}</div>
+        </div>
+      </div>`).join("");
+
+    const benefits=[
+      ["trending-up","Increase Occupancy","Smart availability and channel sync keep more rooms filled."],
+      ["zap","Reduce Manual Work","Automate housekeeping, billing, and guest communication."],
+      ["heart","Improve Guest Experience","Personalized service from rich guest profiles."],
+      ["layers","Centralize Operations","Every department working from a single source of truth."],
+    ];
+    document.getElementById("benefits").innerHTML = benefits.map(([i,t,d])=>`
+      <div class="flex gap-4"><span class="grid size-10 shrink-0 place-items-center rounded-xl bg-indigo-50 text-indigo-600"><i data-lucide="${i}" class="size-5"></i></span>
+      <div><h3 class="text-base font-semibold text-gray-900">${t}</h3><p class="mt-0.5 text-sm text-gray-500">${d}</p></div></div>`).join("");
+
+    const chat=[
+      ["u","Which rooms generate the most revenue?"],
+      ["a","Suites on floors 4–5 lead with <b>$128,400</b> this quarter — 31% of total revenue. Want a breakdown by room type?"],
+      ["u","Show pending payments."],
+      ["a","There are <b>3 pending payments</b> totaling <b>$2,140</b>. The oldest is INV-90121 (5 days)."],
+    ];
+    document.getElementById("aiChat").innerHTML = chat.map(([who,t])=>who==="u"
+      ?`<div class="flex justify-end"><div class="max-w-[80%] rounded-2xl rounded-br-sm bg-indigo-600 px-4 py-2.5 text-sm text-white">${t}</div></div>`
+      :`<div class="flex gap-2"><span class="mt-0.5 grid size-7 shrink-0 place-items-center rounded-lg bg-gradient-to-br from-indigo-600 to-violet-600 text-white"><i data-lucide="sparkles" class="size-3.5"></i></span><div class="max-w-[80%] rounded-2xl rounded-tl-sm bg-gray-100 px-4 py-2.5 text-sm text-gray-700">${t}</div></div>`).join("");
+
+    document.getElementById("testHead").innerHTML = S.sectionHead({eyebrow:"Customers",title:"Loved by hoteliers everywhere",sub:"See why properties of every size choose HotelOS."});
+    const tests=[
+      ["HotelOS cut our check-in time in half and our front desk has never been calmer. The dashboard is the first thing I open every morning.","Priya Menon","GM, The Lumière Boutique","PM"],
+      ["We run three properties and finally see everything in one place. Occupancy is up 22% since we switched.","Daniel Foster","Owner, Marina Bay Resorts","DF"],
+      ["The AI assistant answers questions I used to spend hours pulling reports for. It feels like having an extra analyst.","Sofia Rossi","Operations Lead, Azure Stays","SR"],
+    ];
+    document.getElementById("testGrid").innerHTML = tests.map(([q,n,r,ini])=>`
+      <figure class="flex flex-col rounded-2xl border border-gray-200 bg-white p-6 shadow-sm">
+        <div class="flex gap-0.5 text-amber-400">${[...Array(5)].map(()=>'<i data-lucide="star" class="size-4 fill-current"></i>').join("")}</div>
+        <blockquote class="mt-4 flex-1 text-sm leading-relaxed text-gray-700">"${q}"</blockquote>
+        <figcaption class="mt-5 flex items-center gap-3 border-t border-gray-100 pt-4">
+          <span class="grid size-10 place-items-center rounded-full bg-gradient-to-br from-indigo-500 to-violet-500 text-xs font-semibold text-white">${ini}</span>
+          <div><p class="text-sm font-semibold text-gray-900">${n}</p><p class="text-xs text-gray-400">${r}</p></div></figcaption>
+      </figure>`).join("");
+
+    document.getElementById("priceHead").innerHTML = S.sectionHead({eyebrow:"Pricing",title:"Simple, transparent pricing",sub:"Start free. Upgrade as your property grows."});
+    const plans=[
+      ["Starter","$49","per month","For small & boutique stays",["Up to 20 rooms","Reservations & front desk","Guest CRM","Email support"],false],
+      ["Professional","$129","per month","For growing hotels",["Up to 100 rooms","Everything in Starter","Housekeeping & billing","AI Insights & reports","WhatsApp automation","Priority support"],true],
+      ["Enterprise","Custom","let's talk","For groups & chains",["Unlimited rooms & properties","Everything in Professional","Dedicated success manager","SSO & advanced security","Custom integrations","99.9% uptime SLA"],false],
+    ];
+    document.getElementById("priceGrid").innerHTML = plans.map(([n,p,per,d,feats,hl])=>`
+      <div class="relative flex flex-col rounded-2xl border ${hl?'border-indigo-600 shadow-xl shadow-indigo-600/10':'border-gray-200 shadow-sm'} bg-white p-7">
+        ${hl?'<span class="absolute -top-3 left-1/2 -translate-x-1/2 rounded-full bg-gradient-to-br from-indigo-600 to-violet-600 px-3 py-1 text-xs font-semibold text-white">Most popular</span>':''}
+        <h3 class="text-lg font-semibold text-gray-900">${n}</h3><p class="mt-1 text-sm text-gray-500">${d}</p>
+        <div class="mt-5 flex items-baseline gap-1"><span class="text-4xl font-semibold tracking-tight">${p}</span><span class="text-sm text-gray-400">/${per}</span></div>
+        <a href="signup.html" class="mt-6 rounded-xl px-4 py-2.5 text-center text-sm font-semibold transition ${hl?'bg-gradient-to-br from-indigo-600 to-violet-600 text-white hover:opacity-95':'border border-gray-200 text-gray-800 hover:bg-gray-50'}">${n==="Enterprise"?"Contact sales":"Start free trial"}</a>
+        <ul class="mt-7 space-y-3">${feats.map(f=>`<li class="flex items-start gap-2.5 text-sm text-gray-600"><i data-lucide="check" class="mt-0.5 size-4 shrink-0 text-emerald-600"></i>${f}</li>`).join("")}</ul>
+      </div>`).join("");
+
+    document.getElementById("faqHead").innerHTML = S.sectionHead({eyebrow:"FAQ",title:"Frequently asked questions"});
+    const faqs=[
+      ["How does the free trial work?","You get full access to all Professional features for 14 days. No credit card required — and you can invite your whole team."],
+      ["Can I manage multiple properties?","Yes. The Professional and Enterprise plans let you switch between properties from a single account with consolidated reporting."],
+      ["Is training required?","HotelOS is designed to be intuitive, and most teams are productive in under an hour. We also provide guided onboarding and live support."],
+      ["Do you support GST invoices?","Absolutely. Billing supports GST-compliant invoices, multiple tax slabs, and downloadable statements."],
+      ["Can I import existing data?","Yes — import guests, reservations, and room data via CSV, or let our team handle a white-glove migration for you."],
+    ];
+    document.getElementById("faqList").innerHTML = faqs.map(([q,a])=>`
+      <div data-accordion class="rounded-xl border border-gray-200 bg-white">
+        <button class="flex w-full items-center justify-between gap-4 px-5 py-4 text-left"><span class="text-sm font-medium text-gray-900">${q}</span><i data-lucide="chevron-down" data-chevron class="size-4 shrink-0 text-gray-400 transition"></i></button>
+        <div data-body class="hidden px-5 pb-4 text-sm leading-relaxed text-gray-500">${a}</div>
+      </div>`).join("");
+
+    mountChrome("");
+  </script>
+</body>
+</html>

@@ -1,0 +1,92 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Dashboard · HotelOS</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <script>tailwind.config={theme:{extend:{fontFamily:{sans:['Inter','ui-sans-serif','system-ui']},colors:{indigo:{600:'#4F46E5'}}}}}</script>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+  <script src="https://unpkg.com/lucide@latest"></script>
+  <style>body{font-family:'Inter',sans-serif}::-webkit-scrollbar{width:8px;height:8px}::-webkit-scrollbar-thumb{background:#E5E7EB;border-radius:8px}.size-4\.5{width:1.125rem;height:1.125rem}</style>
+</head>
+<body>
+  <script src="assets/data.js"></script>
+  <script src="assets/shell.js"></script>
+  <script>
+    const H = window.HOTEL, U = window.UI;
+
+    const kpis = `<div class="grid grid-cols-1 gap-4 sm:grid-cols-2 xl:grid-cols-4">
+      ${U.kpiCard({label:"Today's Occupancy", value:H.kpis.occupancy+"%", delta:"12%", deltaUp:true, icon:"bed-double", sub:"43 of 50 rooms"})}
+      ${U.kpiCard({label:"Revenue Today", value:U.money(H.kpis.revenue), delta:"8.4%", deltaUp:true, icon:"banknote", sub:"vs $38,090 yesterday"})}
+      ${U.kpiCard({label:"Arrivals Today", value:H.kpis.arrivals, delta:"3", deltaUp:true, icon:"log-in", sub:"5 not yet checked in"})}
+      ${U.kpiCard({label:"Departures Today", value:H.kpis.departures, delta:"2", deltaUp:false, icon:"log-out", sub:"2 late checkouts"})}
+    </div>`;
+
+    const aiInsights = `<section class="rounded-xl border border-indigo-100 bg-gradient-to-br from-indigo-50 to-violet-50 p-5">
+      <div class="flex items-center gap-2"><span class="grid size-8 place-items-center rounded-lg bg-indigo-600 text-white"><i data-lucide="sparkles" class="size-4.5"></i></span>
+        <h3 class="text-sm font-semibold text-gray-900">AI Insights</h3>
+        <span class="ml-auto rounded-full bg-white/70 px-2 py-0.5 text-[10px] font-medium text-indigo-600">Beta</span></div>
+      <ul class="mt-4 space-y-2.5">
+        ${[
+          ["trending-up","Occupancy increased by <b>12%</b> this week — your best run since April."],
+          ["credit-card","<b>3 guests</b> have pending payments totaling $2,140."],
+          ["calendar","Weekend forecast: expect <b>92% occupancy</b>. Consider dynamic pricing."],
+        ].map(([i,t])=>`<li class="flex items-start gap-2.5 text-sm text-gray-700"><i data-lucide="${i}" class="mt-0.5 size-4 shrink-0 text-indigo-500"></i><span>${t}</span></li>`).join("")}
+      </ul></section>`;
+
+    const charts = `<div class="grid grid-cols-1 gap-4 lg:grid-cols-3">
+      <div class="lg:col-span-2">${U.sectionCard("Revenue trend",
+        `<div class="px-5 pb-5 pt-4"><div class="flex items-baseline gap-2"><span class="text-2xl font-semibold">${U.money(H.kpis.revenue)}</span><span class="text-xs font-medium text-emerald-600">▲ 8.4%</span></div>
+         <p class="text-xs text-gray-400">Last 16 days</p>${U.lineChart(H.revenueTrend)}</div>`,
+        `<button class="rounded-lg border border-gray-200 px-2.5 py-1 text-xs font-medium text-gray-600 hover:bg-gray-50">16d</button>`)}</div>
+      ${U.sectionCard("Occupancy",`<div class="px-5 pb-5 pt-4"><div class="text-2xl font-semibold">${H.kpis.occupancy}%</div><p class="text-xs text-gray-400">Daily occupancy rate</p>${U.barChart(H.occupancyTrend,"#059669")}</div>`)}
+    </div>`;
+
+    const arrivals = H.reservations.filter(r=>r.status!=="Cancelled").slice(0,5);
+    const arrivalsWidget = U.sectionCard("Today's arrivals",
+      `<ul class="divide-y divide-gray-50">${arrivals.map(r=>`<li class="flex items-center gap-3 px-5 py-3">
+        ${U.avatar(r.initials,r.vip)}<div class="min-w-0 flex-1"><p class="truncate text-sm font-medium text-gray-900">${r.guest}</p><p class="text-xs text-gray-400">Room ${r.room} · ${r.guestsCount} guests</p></div>
+        ${U.badge(r.status)}</li>`).join("")}</ul>`,
+      `<a href="reservations.html" class="text-xs font-medium text-indigo-600 hover:underline">View all</a>`);
+
+    const pending = H.invoices.filter(i=>i.status==="Pending"||i.status==="Overdue").slice(0,4);
+    const pendingWidget = U.sectionCard("Pending payments",
+      `<ul class="divide-y divide-gray-50">${pending.map(i=>`<li class="flex items-center gap-3 px-5 py-3">
+        ${U.avatar(i.initials)}<div class="min-w-0 flex-1"><p class="truncate text-sm font-medium text-gray-900">${i.guest}</p><p class="text-xs text-gray-400">${i.id} · Room ${i.room}</p></div>
+        <div class="text-right"><p class="text-sm font-semibold">${U.money(i.amount)}</p>${U.badge(i.status)}</div></li>`).join("")}</ul>`,
+      `<a href="billing.html" class="text-xs font-medium text-indigo-600 hover:underline">Billing</a>`);
+
+    const activityWidget = U.sectionCard("Recent activity",
+      `<ul class="space-y-0 px-5 py-1">${H.activities.map((a,idx)=>`<li class="flex gap-3 py-2.5">
+        <div class="flex flex-col items-center"><span class="grid size-7 place-items-center rounded-full bg-${a.color}-50 text-${a.color}-600"><i data-lucide="${a.icon}" class="size-3.5"></i></span>
+        ${idx<H.activities.length-1?'<span class="my-0.5 w-px flex-1 bg-gray-100"></span>':''}</div>
+        <div class="pb-1"><p class="text-sm text-gray-700">${a.text}</p><p class="text-xs text-gray-400">${a.time}</p></div></li>`).join("")}</ul>`);
+
+    const statusCounts = H.rooms.reduce((m,r)=>{m[r.status]=(m[r.status]||0)+1;return m;},{});
+    const segColors={Available:"#059669",Occupied:"#4F46E5",Reserved:"#8B5CF6",Cleaning:"#F59E0B",Maintenance:"#DC2626"};
+    const segs=Object.keys(segColors).map(k=>({value:statusCounts[k]||0,color:segColors[k],label:k}));
+    const roomSummary = U.sectionCard("Room status",
+      `<div class="flex items-center gap-5 px-5 py-4"><div class="shrink-0">${U.donut(segs)}</div>
+       <ul class="flex-1 space-y-2">${segs.map(s=>`<li class="flex items-center justify-between text-sm"><span class="flex items-center gap-2"><span class="size-2.5 rounded-full" style="background:${s.color}"></span>${s.label}</span><span class="font-semibold text-gray-900">${s.value}</span></li>`).join("")}</ul></div>`);
+
+    const content = `<div class="space-y-5">
+      <div class="flex flex-wrap items-end justify-between gap-3">
+        <div><h2 class="text-xl font-semibold tracking-tight">Good morning, Aniruth 👋</h2><p class="text-sm text-gray-500">Here's what's happening at Grand Marina today, Jun 28, 2026.</p></div>
+        <div class="flex gap-2"><button class="flex items-center gap-2 rounded-lg border border-gray-200 bg-white px-3 py-2 text-sm font-medium text-gray-700 hover:bg-gray-50"><i data-lucide="download" class="size-4"></i>Export</button>
+        <a href="front-desk.html" class="flex items-center gap-2 rounded-lg bg-indigo-600 px-3 py-2 text-sm font-medium text-white hover:bg-indigo-700"><i data-lucide="plus" class="size-4"></i>Quick action</a></div>
+      </div>
+      ${kpis}
+      ${charts}
+      <div class="grid grid-cols-1 gap-4 lg:grid-cols-3">
+        <div class="space-y-4 lg:col-span-2">${arrivalsWidget}${pendingWidget}</div>
+        <div class="space-y-4">${aiInsights}${roomSummary}</div>
+      </div>
+      ${activityWidget}
+    </div>`;
+
+    renderLayout("dashboard","Dashboard",content);
+  </script>
+</body>
+</html>

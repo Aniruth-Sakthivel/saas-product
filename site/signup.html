@@ -1,0 +1,64 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Sign up · HotelOS</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <script>tailwind.config={theme:{extend:{fontFamily:{sans:['Inter','ui-sans-serif']}}}}</script>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+  <script src="https://unpkg.com/lucide@latest"></script>
+  <style>body{font-family:'Inter',sans-serif}.size-4\.5{width:1.125rem;height:1.125rem}
+    @keyframes hos-up{from{opacity:0;transform:translateY(18px)}to{opacity:1;transform:none}}
+    @keyframes hos-blob{0%,100%{transform:translate(0,0) scale(1)}50%{transform:translate(0,18px) scale(1.08)}}
+    .anim-up{animation:hos-up .6s cubic-bezier(.22,.8,.18,1) both}
+    .anim-blob{animation:hos-blob 9s ease-in-out infinite}
+    a,button,input{transition:all .2s ease}
+    @media(prefers-reduced-motion:reduce){.anim-up,.anim-blob{animation:none!important;opacity:1!important}}</style>
+</head>
+<body class="bg-white text-gray-900 antialiased">
+  <div class="grid min-h-screen lg:grid-cols-2">
+    <div class="flex flex-col px-5 py-8 sm:px-10">
+      <a href="index.html" class="flex items-center gap-2"><span class="grid size-8 place-items-center rounded-lg bg-gradient-to-br from-indigo-600 to-violet-600 text-white"><i data-lucide="hotel" class="size-4.5"></i></span><span class="text-[17px] font-semibold tracking-tight">HotelOS</span></a>
+      <div class="anim-up mx-auto flex w-full max-w-sm flex-1 flex-col justify-center py-10">
+        <h1 class="text-2xl font-semibold tracking-tight">Start your free trial</h1>
+        <p class="mt-1.5 text-sm text-gray-500">14 days free. No credit card required.</p>
+        <button class="mt-7 flex w-full items-center justify-center gap-2.5 rounded-xl border border-gray-200 px-4 py-2.5 text-sm font-medium transition hover:bg-gray-50">
+          <svg class="size-4.5" viewBox="0 0 24 24"><path fill="#4285F4" d="M22.56 12.25c0-.78-.07-1.53-.2-2.25H12v4.26h5.92a5.06 5.06 0 0 1-2.2 3.32v2.77h3.57c2.08-1.92 3.27-4.74 3.27-8.1Z"/><path fill="#34A853" d="M12 23c2.97 0 5.46-.98 7.28-2.66l-3.57-2.77c-.99.66-2.26 1.06-3.71 1.06-2.86 0-5.29-1.93-6.16-4.53H2.18v2.84A11 11 0 0 0 12 23Z"/><path fill="#FBBC05" d="M5.84 14.1a6.6 6.6 0 0 1 0-4.2V7.06H2.18a11 11 0 0 0 0 9.88l3.66-2.84Z"/><path fill="#EA4335" d="M12 5.38c1.62 0 3.06.56 4.21 1.64l3.15-3.15C17.45 2.09 14.97 1 12 1A11 11 0 0 0 2.18 7.06l3.66 2.84C6.71 7.3 9.14 5.38 12 5.38Z"/></svg>
+          Continue with Google
+        </button>
+        <div class="my-6 flex items-center gap-3 text-xs text-gray-400"><span class="h-px flex-1 bg-gray-200"></span>OR<span class="h-px flex-1 bg-gray-200"></span></div>
+        <form class="space-y-4" onsubmit="event.preventDefault();window.location.href='onboarding.html'">
+          <div class="grid grid-cols-2 gap-4">
+            <label class="block"><span class="mb-1.5 block text-sm font-medium text-gray-700">Full name</span><input required placeholder="Jane Doe" class="w-full rounded-xl border border-gray-200 px-3.5 py-2.5 text-sm focus:border-indigo-500 focus:outline-none focus:ring-2 focus:ring-indigo-100"/></label>
+            <label class="block"><span class="mb-1.5 block text-sm font-medium text-gray-700">Hotel name</span><input required placeholder="Grand Marina" class="w-full rounded-xl border border-gray-200 px-3.5 py-2.5 text-sm focus:border-indigo-500 focus:outline-none focus:ring-2 focus:ring-indigo-100"/></label>
+          </div>
+          <label class="block"><span class="mb-1.5 block text-sm font-medium text-gray-700">Work email</span><input type="email" required placeholder="you@hotel.com" class="w-full rounded-xl border border-gray-200 px-3.5 py-2.5 text-sm focus:border-indigo-500 focus:outline-none focus:ring-2 focus:ring-indigo-100"/></label>
+          <label class="block"><span class="mb-1.5 block text-sm font-medium text-gray-700">Password</span><input type="password" required placeholder="••••••••" class="w-full rounded-xl border border-gray-200 px-3.5 py-2.5 text-sm focus:border-indigo-500 focus:outline-none focus:ring-2 focus:ring-indigo-100"/></label>
+          <label class="flex items-start gap-2 text-sm text-gray-600"><input type="checkbox" required class="mt-0.5 size-4 rounded border-gray-300 text-indigo-600 focus:ring-indigo-500"/> I agree to the <a href="#" class="font-medium text-indigo-600 hover:underline">Terms</a> and <a href="#" class="font-medium text-indigo-600 hover:underline">Privacy Policy</a>.</label>
+          <button class="w-full rounded-xl bg-gradient-to-br from-indigo-600 to-violet-600 px-4 py-2.5 text-sm font-semibold text-white transition hover:opacity-95">Create account</button>
+        </form>
+        <p class="mt-6 text-center text-sm text-gray-500">Already have an account? <a href="login.html" class="font-semibold text-indigo-600 hover:underline">Log in</a></p>
+      </div>
+    </div>
+    <div class="relative hidden overflow-hidden bg-gradient-to-br from-indigo-600 to-violet-700 p-12 lg:flex lg:flex-col lg:justify-center">
+      <div class="anim-blob pointer-events-none absolute -left-20 -bottom-20 size-80 rounded-full bg-white/10 blur-3xl"></div>
+      <div class="anim-up relative max-w-md text-white" style="animation-delay:.1s">
+        <h2 class="text-3xl font-semibold leading-tight">Join hundreds of properties running smarter.</h2>
+        <div class="mt-8 grid grid-cols-2 gap-4">
+          <div class="rounded-2xl border border-white/15 bg-white/10 p-5 backdrop-blur"><p class="text-2xl font-semibold">500+</p><p class="mt-0.5 text-sm text-indigo-100">Properties</p></div>
+          <div class="rounded-2xl border border-white/15 bg-white/10 p-5 backdrop-blur"><p class="text-2xl font-semibold">1.2M+</p><p class="mt-0.5 text-sm text-indigo-100">Guests served</p></div>
+          <div class="rounded-2xl border border-white/15 bg-white/10 p-5 backdrop-blur"><p class="text-2xl font-semibold">32%</p><p class="mt-0.5 text-sm text-indigo-100">Avg. occupancy lift</p></div>
+          <div class="rounded-2xl border border-white/15 bg-white/10 p-5 backdrop-blur"><p class="text-2xl font-semibold">4.9★</p><p class="mt-0.5 text-sm text-indigo-100">Customer rating</p></div>
+        </div>
+        <ul class="mt-8 space-y-3">
+          <li class="flex items-center gap-3 text-sm"><span class="grid size-6 place-items-center rounded-full bg-white/20"><i data-lucide="check" class="size-3.5"></i></span>Set up in minutes</li>
+          <li class="flex items-center gap-3 text-sm"><span class="grid size-6 place-items-center rounded-full bg-white/20"><i data-lucide="check" class="size-3.5"></i></span>Free onboarding &amp; migration</li>
+          <li class="flex items-center gap-3 text-sm"><span class="grid size-6 place-items-center rounded-full bg-white/20"><i data-lucide="check" class="size-3.5"></i></span>Cancel anytime</li>
+        </ul>
+      </div>
+    </div>
+  </div>
+  <script>lucide.createIcons();</script>
+</body>
+</html>

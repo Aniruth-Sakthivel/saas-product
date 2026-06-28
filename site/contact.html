@@ -1,0 +1,51 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Contact · HotelOS</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <script>tailwind.config={theme:{extend:{fontFamily:{sans:['Inter','ui-sans-serif']}}}}</script>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+  <script src="https://unpkg.com/lucide@latest"></script>
+  <style>body{font-family:'Inter',sans-serif}.size-4\.5{width:1.125rem;height:1.125rem}</style>
+</head>
+<body class="bg-[#FAFAFA] text-gray-900 antialiased">
+  <div id="navbar"></div>
+  <section class="px-5 py-16 sm:px-8 sm:py-24">
+    <div class="mx-auto grid max-w-6xl grid-cols-1 gap-12 lg:grid-cols-2">
+      <div>
+        <div id="head"></div>
+        <div class="mt-8 space-y-5" id="info"></div>
+        <div class="mt-10 rounded-2xl border border-gray-200 bg-white p-6 shadow-sm">
+          <p class="text-sm font-semibold">Book a personalized demo</p>
+          <p class="mt-1 text-sm text-gray-500">See HotelOS in action with a 30-minute walkthrough tailored to your property.</p>
+          <div class="mt-4 flex items-center gap-2 text-sm text-emerald-600"><span class="size-2 rounded-full bg-emerald-500"></span>Avg. response under 2 hours</div>
+        </div>
+      </div>
+      <form class="rounded-2xl border border-gray-200 bg-white p-7 shadow-sm" onsubmit="event.preventDefault();this.querySelector('#sent').classList.remove('hidden')">
+        <h3 class="text-lg font-semibold">Send us a message</h3>
+        <div class="mt-5 space-y-4" id="fields"></div>
+        <button class="mt-6 w-full rounded-xl bg-gradient-to-br from-indigo-600 to-violet-600 px-4 py-3 text-sm font-semibold text-white transition hover:opacity-95">Send message</button>
+        <p id="sent" class="mt-3 hidden rounded-lg bg-emerald-50 px-3 py-2 text-center text-sm text-emerald-700">Thanks! We'll be in touch shortly. (Demo only)</p>
+      </form>
+    </div>
+  </section>
+  <div id="footer"></div>
+  <script src="assets/site.js"></script>
+  <script>
+    const S=window.SITE;
+    document.getElementById("head").innerHTML = S.badge("Contact","mail")+S.sectionHead({title:"Let's talk",sub:"Questions, demos, or partnerships — we'd love to hear from you.",center:false});
+    const info=[["mail","Email","hello@hotelos.com"],["phone","Phone","+1 (555) 014-2200"],["map-pin","Office","120 Harbor View Blvd, Miami, FL"]];
+    document.getElementById("info").innerHTML = info.map(([i,l,v])=>`<div class="flex items-center gap-3"><span class="grid size-10 place-items-center rounded-xl bg-indigo-50 text-indigo-600"><i data-lucide="${i}" class="size-5"></i></span><div><p class="text-xs text-gray-400">${l}</p><p class="text-sm font-medium text-gray-900">${v}</p></div></div>`).join("");
+    const inp=`class="w-full rounded-xl border border-gray-200 px-3.5 py-2.5 text-sm focus:border-indigo-500 focus:outline-none focus:ring-2 focus:ring-indigo-100"`;
+    const f=(l,el)=>`<label class="block"><span class="mb-1.5 block text-sm font-medium text-gray-700">${l}</span>${el}</label>`;
+    document.getElementById("fields").innerHTML =
+      `<div class="grid grid-cols-2 gap-4">${f("Full name",`<input ${inp} placeholder="Jane Doe"/>`)}${f("Hotel name",`<input ${inp} placeholder="Grand Marina"/>`)}</div>`+
+      f("Work email",`<input type="email" ${inp} placeholder="you@hotel.com"/>`)+
+      f("Number of rooms",`<select ${inp}><option>1–20</option><option>21–100</option><option>100+</option></select>`)+
+      f("Message",`<textarea rows="4" ${inp} placeholder="Tell us about your property…"></textarea>`);
+    mountChrome("");
+  </script>
+</body>
+</html>

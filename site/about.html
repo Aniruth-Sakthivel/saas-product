@@ -1,0 +1,49 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>About · HotelOS</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <script>tailwind.config={theme:{extend:{fontFamily:{sans:['Inter','ui-sans-serif']}}}}</script>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+  <script src="https://unpkg.com/lucide@latest"></script>
+  <style>body{font-family:'Inter',sans-serif}.size-4\.5{width:1.125rem;height:1.125rem}</style>
+</head>
+<body class="bg-[#FAFAFA] text-gray-900 antialiased">
+  <div id="navbar"></div>
+  <section class="px-5 pb-12 pt-16 text-center sm:px-8 sm:pt-24"><div class="mx-auto max-w-3xl" id="head"></div></section>
+  <section class="px-5 sm:px-8"><div class="mx-auto grid max-w-5xl grid-cols-2 gap-6 sm:grid-cols-4" id="stats"></div></section>
+  <section class="px-5 py-24 sm:px-8">
+    <div class="mx-auto grid max-w-6xl grid-cols-1 items-center gap-12 lg:grid-cols-2">
+      <div><p class="text-sm font-semibold text-indigo-600">Our mission</p>
+        <h2 class="mt-2 text-3xl font-semibold tracking-tight sm:text-4xl">Hospitality software that feels like hospitality</h2>
+        <p class="mt-4 text-lg text-gray-500">HotelOS was founded by hoteliers and engineers who were tired of clunky, dated property management systems. We set out to build software as warm, polished, and effortless as a great stay.</p>
+        <p class="mt-4 text-gray-500">Today we power hundreds of properties across the world — from boutique inns to multi-property resort groups — helping them fill more rooms, delight more guests, and spend less time on busywork.</p>
+      </div>
+      <div class="grid grid-cols-2 gap-4">
+        <div class="rounded-2xl border border-gray-200 bg-white p-6 shadow-sm transition hover:-translate-y-0.5 hover:shadow-lg"><span class="grid size-10 place-items-center rounded-xl bg-indigo-50 text-indigo-600"><i data-lucide="heart" class="size-5"></i></span><h3 class="mt-4 text-sm font-semibold">Guest-first design</h3></div>
+        <div class="rounded-2xl border border-gray-200 bg-white p-6 shadow-sm transition hover:-translate-y-0.5 hover:shadow-lg"><span class="grid size-10 place-items-center rounded-xl bg-indigo-50 text-indigo-600"><i data-lucide="users" class="size-5"></i></span><h3 class="mt-4 text-sm font-semibold">Built with hoteliers</h3></div>
+        <div class="rounded-2xl border border-gray-200 bg-white p-6 shadow-sm transition hover:-translate-y-0.5 hover:shadow-lg"><span class="grid size-10 place-items-center rounded-xl bg-indigo-50 text-indigo-600"><i data-lucide="shield-check" class="size-5"></i></span><h3 class="mt-4 text-sm font-semibold">Privacy &amp; security</h3></div>
+        <div class="rounded-2xl border border-gray-200 bg-white p-6 shadow-sm transition hover:-translate-y-0.5 hover:shadow-lg"><span class="grid size-10 place-items-center rounded-xl bg-indigo-50 text-indigo-600"><i data-lucide="rocket" class="size-5"></i></span><h3 class="mt-4 text-sm font-semibold">Always improving</h3></div>
+      </div>
+    </div>
+  </section>
+  <section class="bg-white px-5 py-24 sm:px-8">
+    <div class="mx-auto max-w-6xl"><div id="teamHead"></div>
+      <div class="mt-12 grid grid-cols-2 gap-6 sm:grid-cols-4" id="team"></div></div>
+  </section>
+  <div id="footer"></div>
+  <script src="assets/site.js"></script>
+  <script>
+    const S=window.SITE;
+    document.getElementById("head").innerHTML = S.badge("About us","building-2")+S.sectionHead({title:"We're building the future of hotel operations",sub:"A team obsessed with hospitality, design, and helping properties thrive."});
+    const stats=[["500+","Properties"],["1.2M+","Guests served"],["28","Countries"],["99.9%","Uptime"]];
+    document.getElementById("stats").innerHTML = stats.map(([v,l])=>`<div class="rounded-2xl border border-gray-200 bg-white p-6 text-center shadow-sm"><p class="text-3xl font-semibold tracking-tight text-indigo-600">${v}</p><p class="mt-1 text-sm text-gray-500">${l}</p></div>`).join("");
+    document.getElementById("teamHead").innerHTML = S.sectionHead({eyebrow:"Team",title:"Meet the people behind HotelOS"});
+    const team=[["Aria Kapoor","Co-founder & CEO","AK"],["Marcus Lee","Co-founder & CTO","ML"],["Sofia Rossi","Head of Product","SR"],["Daniel Foster","Head of Customer Success","DF"]];
+    document.getElementById("team").innerHTML = team.map(([n,r,i])=>`<div class="rounded-2xl border border-gray-200 bg-white p-6 text-center shadow-sm"><span class="mx-auto grid size-16 place-items-center rounded-full bg-gradient-to-br from-indigo-500 to-violet-500 text-lg font-semibold text-white">${i}</span><p class="mt-4 font-semibold">${n}</p><p class="text-sm text-gray-400">${r}</p></div>`).join("");
+    mountChrome("");
+  </script>
+</body>
+</html>

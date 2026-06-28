@@ -1,0 +1,99 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Reservations · HotelOS</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <script>tailwind.config={theme:{extend:{fontFamily:{sans:['Inter','ui-sans-serif']},colors:{indigo:{600:'#4F46E5'}}}}}</script>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+  <script src="https://unpkg.com/lucide@latest"></script>
+  <style>body{font-family:'Inter',sans-serif}::-webkit-scrollbar{width:8px;height:8px}::-webkit-scrollbar-thumb{background:#E5E7EB;border-radius:8px}.size-4\.5{width:1.125rem;height:1.125rem}</style>
+</head>
+<body>
+  <script src="assets/data.js"></script>
+  <script src="assets/shell.js"></script>
+  <script>
+    const H = window.HOTEL, U = window.UI;
+
+    function drawer(r){
+      const row=(l,v)=>`<div class="flex items-center justify-between py-2.5"><dt class="text-sm text-gray-500">${l}</dt><dd class="text-sm font-medium text-gray-900">${v}</dd></div>`;
+      openDrawer("Reservation details", `
+        <div class="space-y-6 p-5">
+          <div class="flex items-center gap-3">${U.avatar(r.initials,r.vip)}<div><p class="text-base font-semibold text-gray-900">${r.guest}</p><p class="text-xs text-gray-400">${r.email}</p></div><div class="ml-auto">${U.badge(r.status)}</div></div>
+          <div class="grid grid-cols-2 gap-3">
+            <div class="rounded-xl border border-gray-200 p-3"><p class="text-xs text-gray-400">Check-in</p><p class="mt-0.5 text-sm font-semibold">${r.checkInStr}</p></div>
+            <div class="rounded-xl border border-gray-200 p-3"><p class="text-xs text-gray-400">Check-out</p><p class="mt-0.5 text-sm font-semibold">${r.checkOutStr}</p></div>
+          </div>
+          <div class="rounded-xl border border-gray-200 divide-y divide-gray-50 px-4">
+            ${row("Reservation ID",r.id)}${row("Room",r.room+" · "+r.roomType)}${row("Guests",r.guestsCount)}${row("Nights",r.nights)}${row("Source",r.source)}${row("Payment",U.badge(r.payment))}${row("Total","<span class='text-base'>"+U.money(r.total)+"</span>")}
+          </div>
+          <div><h4 class="mb-2 text-xs font-semibold uppercase tracking-wide text-gray-400">Timeline</h4>
+            <ul class="space-y-3">${[["Reservation created","Jun 20, 2026"],["Payment "+r.payment.toLowerCase(),"Jun 21, 2026"],["Confirmation email sent","Jun 21, 2026"]].map(([t,d])=>`<li class="flex gap-3"><span class="mt-1 size-2 shrink-0 rounded-full bg-indigo-500"></span><div><p class="text-sm text-gray-700">${t}</p><p class="text-xs text-gray-400">${d}</p></div></li>`).join("")}</ul></div>
+          <div class="flex gap-2 pt-2"><button class="flex-1 rounded-lg bg-indigo-600 px-3 py-2 text-sm font-medium text-white hover:bg-indigo-700">Check in</button>
+          <button class="flex-1 rounded-lg border border-gray-200 px-3 py-2 text-sm font-medium text-gray-700 hover:bg-gray-50">Edit</button>
+          <button class="grid size-9 place-items-center rounded-lg border border-gray-200 text-gray-500 hover:bg-gray-50"><i data-lucide="more-horizontal" class="size-4"></i></button></div>
+        </div>`,"max-w-md");
+    }
+
+    function tableRows(list){
+      return list.map((r,i)=>`<tr class="cursor-pointer hover:bg-gray-50" data-i="${i}">
+        <td class="whitespace-nowrap px-5 py-3"><div class="flex items-center gap-2.5">${U.avatar(r.initials,r.vip)}<div><p class="text-sm font-medium text-gray-900">${r.guest}</p><p class="text-xs text-gray-400">${r.id}</p></div></div></td>
+        <td class="px-5 py-3 text-sm text-gray-700">${r.room}<span class="block text-xs text-gray-400">${r.roomType}</span></td>
+        <td class="whitespace-nowrap px-5 py-3 text-sm text-gray-700">${r.checkInStr}</td>
+        <td class="whitespace-nowrap px-5 py-3 text-sm text-gray-700">${r.checkOutStr}</td>
+        <td class="px-5 py-3 text-sm text-gray-700"><span class="inline-flex items-center gap-1"><i data-lucide="users" class="size-3.5 text-gray-400"></i>${r.guestsCount}</span></td>
+        <td class="px-5 py-3">${U.badge(r.status)}</td>
+        <td class="px-5 py-3">${U.badge(r.payment)}</td>
+        <td class="px-5 py-3 text-right"><button class="grid size-8 place-items-center rounded-lg text-gray-400 hover:bg-gray-100 hover:text-gray-600"><i data-lucide="more-horizontal" class="size-4"></i></button></td>
+      </tr>`).join("");
+    }
+
+    let filter="All";
+    function render(){
+      const list = filter==="All"?H.reservations:H.reservations.filter(r=>r.status===filter);
+      const tabs = ["All",...H.resStatuses].map(s=>`<button data-f="${s}" class="rounded-lg px-3 py-1.5 text-sm font-medium ${s===filter?'bg-gray-900 text-white':'text-gray-600 hover:bg-gray-100'}">${s}<span class="ml-1.5 text-xs ${s===filter?'text-gray-300':'text-gray-400'}">${s==="All"?H.reservations.length:H.reservations.filter(r=>r.status===s).length}</span></button>`).join("");
+
+      const content = `<div class="space-y-5">
+        <div class="flex flex-wrap items-center justify-between gap-3">
+          <div><h2 class="text-xl font-semibold tracking-tight">Reservations</h2><p class="text-sm text-gray-500">${H.reservations.length} bookings across all sources</p></div>
+          <button id="newRes" class="flex items-center gap-2 rounded-lg bg-indigo-600 px-3.5 py-2 text-sm font-medium text-white hover:bg-indigo-700"><i data-lucide="plus" class="size-4"></i>New reservation</button>
+        </div>
+        <div class="rounded-xl border border-gray-200 bg-white shadow-[0_1px_2px_rgba(16,24,40,0.04)]">
+          <div class="flex flex-wrap items-center gap-3 border-b border-gray-100 p-3">
+            <div class="flex flex-wrap gap-1">${tabs}</div>
+            <div class="ml-auto flex items-center gap-2">
+              <div class="flex items-center gap-2 rounded-lg border border-gray-200 px-2.5 py-1.5 text-sm"><i data-lucide="search" class="size-4 text-gray-400"></i><input placeholder="Search…" class="w-40 bg-transparent focus:outline-none"/></div>
+              <button class="flex items-center gap-1.5 rounded-lg border border-gray-200 px-2.5 py-1.5 text-sm font-medium text-gray-700 hover:bg-gray-50"><i data-lucide="sliders-horizontal" class="size-4 text-gray-400"></i>Filters</button>
+            </div>
+          </div>
+          <div class="overflow-x-auto">
+            <table class="w-full"><thead><tr class="border-b border-gray-100 bg-gray-50/60 text-left text-xs font-medium uppercase tracking-wide text-gray-400">
+              <th class="px-5 py-2.5">Guest</th><th class="px-5 py-2.5">Room</th><th class="px-5 py-2.5">Check-in</th><th class="px-5 py-2.5">Check-out</th><th class="px-5 py-2.5">Guests</th><th class="px-5 py-2.5">Status</th><th class="px-5 py-2.5">Payment</th><th class="px-5 py-2.5"></th></tr></thead>
+            <tbody class="divide-y divide-gray-50">${list.length?tableRows(list):`<tr><td colspan="8">${U.emptyState("calendar-x","No reservations","No bookings match this filter yet.")}</td></tr>`}</tbody></table>
+          </div>
+          <div class="flex items-center justify-between border-t border-gray-100 px-5 py-3 text-sm text-gray-500"><span>Showing ${list.length} of ${H.reservations.length}</span>
+            <div class="flex gap-1"><button class="rounded-lg border border-gray-200 px-2.5 py-1 hover:bg-gray-50">Prev</button><button class="rounded-lg border border-gray-200 px-2.5 py-1 hover:bg-gray-50">Next</button></div></div>
+        </div>
+      </div>`;
+      renderLayout("reservations","Reservations",content);
+      document.querySelectorAll("[data-f]").forEach(b=>b.onclick=()=>{filter=b.dataset.f;render();});
+      document.querySelectorAll("tbody tr[data-i]").forEach(tr=>tr.onclick=()=>drawer(list[+tr.dataset.i]));
+      document.getElementById("newRes").onclick=()=>newResModal();
+    }
+
+    function newResModal(){
+      const field=(l,el)=>`<label class="block"><span class="mb-1 block text-xs font-medium text-gray-500">${l}</span>${el}</label>`;
+      const inp=`class="w-full rounded-lg border border-gray-200 px-3 py-2 text-sm focus:border-indigo-500 focus:outline-none focus:ring-2 focus:ring-indigo-100"`;
+      openModal("New reservation",`<form class="space-y-4">
+        <div class="grid grid-cols-2 gap-4">${field("Guest name",`<input ${inp} placeholder="Jane Doe"/>`)}${field("Phone",`<input ${inp} placeholder="+1 …"/>`)}</div>
+        <div class="grid grid-cols-2 gap-4">${field("Check-in",`<input type="date" ${inp}/>`)}${field("Check-out",`<input type="date" ${inp}/>`)}</div>
+        <div class="grid grid-cols-2 gap-4">${field("Room type",`<select ${inp}>${H.roomTypes.map(t=>`<option>${t.type}</option>`).join("")}</select>`)}${field("Guests",`<input type="number" value="2" ${inp}/>`)}</div>
+        <div class="flex justify-end gap-2 pt-2"><button type="button" onclick="document.getElementById('drawer-root').innerHTML=''" class="rounded-lg border border-gray-200 px-4 py-2 text-sm font-medium text-gray-700 hover:bg-gray-50">Cancel</button>
+        <button type="button" onclick="document.getElementById('drawer-root').innerHTML=''" class="rounded-lg bg-indigo-600 px-4 py-2 text-sm font-medium text-white hover:bg-indigo-700">Create reservation</button></div></form>`);
+    }
+
+    render();
+  </script>
+</body>
+</html>

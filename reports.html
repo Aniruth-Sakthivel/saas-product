@@ -1,0 +1,51 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Reports · HotelOS</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <script>tailwind.config={theme:{extend:{fontFamily:{sans:['Inter','ui-sans-serif']},colors:{indigo:{600:'#4F46E5'}}}}}</script>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+  <script src="https://unpkg.com/lucide@latest"></script>
+  <style>body{font-family:'Inter',sans-serif}::-webkit-scrollbar{width:8px;height:8px}::-webkit-scrollbar-thumb{background:#E5E7EB;border-radius:8px}.size-4\.5{width:1.125rem;height:1.125rem}</style>
+</head>
+<body>
+  <script src="assets/data.js"></script>
+  <script src="assets/shell.js"></script>
+  <script>
+    const H=window.HOTEL, U=window.UI;
+    const kpis=`<div class="grid grid-cols-1 gap-4 sm:grid-cols-2 xl:grid-cols-4">
+      ${U.kpiCard({label:"Total Revenue",value:U.money(486200),delta:"14%",deltaUp:true,icon:"banknote",sub:"This quarter"})}
+      ${U.kpiCard({label:"Avg. Occupancy",value:"82%",delta:"6%",deltaUp:true,icon:"bed-double",sub:"90-day average"})}
+      ${U.kpiCard({label:"Average Stay",value:"3.4 nts",delta:"0.3",deltaUp:true,icon:"moon",sub:"per reservation"})}
+      ${U.kpiCard({label:"Total Guests",value:H.guests.length,delta:"9",deltaUp:true,icon:"users",sub:"active profiles"})}
+    </div>`;
+
+    const charts=`<div class="grid grid-cols-1 gap-4 lg:grid-cols-3">
+      <div class="lg:col-span-2">${U.sectionCard("Revenue by period",`<div class="px-5 pb-5 pt-4">${U.lineChart(H.revenueTrend)}</div>`)}</div>
+      ${U.sectionCard("Occupancy rate",`<div class="px-5 pb-5 pt-4">${U.barChart(H.occupancyTrend,"#059669")}</div>`)}
+    </div>`;
+
+    const channels=[["Direct",38,"#4F46E5"],["Booking.com",27,"#8B5CF6"],["Expedia",18,"#059669"],["Airbnb",11,"#F59E0B"],["Corporate",6,"#6B7280"]];
+    const channelCard=U.sectionCard("Bookings by channel",`<div class="space-y-3 px-5 py-4">${channels.map(([l,v,c])=>`
+      <div><div class="mb-1 flex justify-between text-sm"><span class="text-gray-600">${l}</span><span class="font-medium text-gray-900">${v}%</span></div>
+      <div class="h-2 rounded-full bg-gray-100"><div class="h-2 rounded-full" style="width:${v}%;background:${c}"></div></div></div>`).join("")}</div>`);
+
+    const roomPerf=U.sectionCard("Top performing room types",`<div class="overflow-x-auto"><table class="w-full">
+      <thead><tr class="border-b border-gray-100 bg-gray-50/60 text-left text-xs font-medium uppercase tracking-wide text-gray-400"><th class="px-5 py-2.5">Room type</th><th class="px-5 py-2.5">Bookings</th><th class="px-5 py-2.5">Occupancy</th><th class="px-5 py-2.5">Revenue</th></tr></thead>
+      <tbody class="divide-y divide-gray-50">${H.roomTypes.map((t,i)=>`<tr class="hover:bg-gray-50"><td class="px-5 py-3 text-sm font-medium text-gray-900">${t.type}</td><td class="px-5 py-3 text-sm text-gray-600">${40-i*5}</td><td class="px-5 py-3 text-sm text-gray-600">${88-i*4}%</td><td class="px-5 py-3 text-sm font-semibold text-gray-900">${U.money((40-i*5)*t.price*3)}</td></tr>`).join("")}</tbody></table></div>`);
+
+    const content=`<div class="space-y-5">
+      <div class="flex flex-wrap items-center justify-between gap-3">
+        <div><h2 class="text-xl font-semibold tracking-tight">Reports</h2><p class="text-sm text-gray-500">Analytics · Q2 2026</p></div>
+        <div class="flex gap-2"><button class="flex items-center gap-2 rounded-lg border border-gray-200 bg-white px-3 py-2 text-sm font-medium text-gray-700 hover:bg-gray-50"><i data-lucide="calendar" class="size-4 text-gray-400"></i>Last 90 days</button>
+        <button class="flex items-center gap-2 rounded-lg bg-indigo-600 px-3 py-2 text-sm font-medium text-white hover:bg-indigo-700"><i data-lucide="download" class="size-4"></i>Export</button></div>
+      </div>
+      ${kpis}${charts}
+      <div class="grid grid-cols-1 gap-4 lg:grid-cols-2">${channelCard}${roomPerf}</div>
+    </div>`;
+    renderLayout("reports","Reports",content);
+  </script>
+</body>
+</html>

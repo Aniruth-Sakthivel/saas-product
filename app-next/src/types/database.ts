@@ -1,0 +1,270 @@
+/**
+ * Hand-authored Supabase database types mirroring supabase/migrations.
+ * Regenerate with `supabase gen types typescript` once the CLI is linked.
+ */
+
+export type Json =
+  | string
+  | number
+  | boolean
+  | null
+  | { [key: string]: Json | undefined }
+  | Json[];
+
+export type UserRole =
+  | "OWNER"
+  | "MANAGER"
+  | "RECEPTIONIST"
+  | "HOUSEKEEPING"
+  | "ACCOUNTANT";
+export type MembershipStatus = "INVITED" | "ACTIVE" | "DISABLED";
+export type RoomStatus =
+  | "AVAILABLE"
+  | "OCCUPIED"
+  | "RESERVED"
+  | "CLEANING"
+  | "MAINTENANCE";
+export type ReservationStatus =
+  | "PENDING"
+  | "CONFIRMED"
+  | "CHECKED_IN"
+  | "CHECKED_OUT"
+  | "CANCELLED";
+export type TaskStatus = "PENDING" | "IN_PROGRESS" | "INSPECTION" | "COMPLETED";
+export type TaskPriority = "LOW" | "MEDIUM" | "HIGH";
+export type PaymentStatus =
+  | "PENDING"
+  | "PAID"
+  | "PARTIAL"
+  | "REFUNDED"
+  | "FAILED";
+export type PaymentMethod =
+  | "CARD"
+  | "CASH"
+  | "BANK_TRANSFER"
+  | "UPI"
+  | "PAYPAL"
+  | "OTHER";
+export type InvoiceStatus =
+  | "DRAFT"
+  | "PENDING"
+  | "PAID"
+  | "OVERDUE"
+  | "REFUNDED"
+  | "CANCELLED";
+
+/** Helper to derive Insert/Update shapes from a Row. */
+type Timestamps = "created_at" | "updated_at";
+
+interface ProfileRow {
+  id: string;
+  email: string;
+  full_name: string | null;
+  avatar_url: string | null;
+  created_at: string;
+  updated_at: string;
+}
+interface OrganizationRow {
+  id: string;
+  name: string;
+  slug: string;
+  type: string;
+  address: string | null;
+  currency: string;
+  timezone: string;
+  logo_url: string | null;
+  brand_color: string;
+  created_by: string;
+  created_at: string;
+  updated_at: string;
+}
+interface MembershipRow {
+  id: string;
+  organization_id: string;
+  profile_id: string | null;
+  role: UserRole;
+  status: MembershipStatus;
+  invited_email: string | null;
+  invite_token: string | null;
+  invited_by: string | null;
+  created_at: string;
+  updated_at: string;
+}
+interface RoomTypeRow {
+  id: string;
+  organization_id: string;
+  name: string;
+  description: string | null;
+  base_price: number;
+  capacity: number;
+  beds: string | null;
+  created_at: string;
+  updated_at: string;
+}
+interface RoomRow {
+  id: string;
+  organization_id: string;
+  number: string;
+  room_type_id: string | null;
+  floor: number;
+  status: RoomStatus;
+  created_at: string;
+  updated_at: string;
+}
+interface GuestRow {
+  id: string;
+  organization_id: string;
+  full_name: string;
+  email: string | null;
+  phone: string | null;
+  city: string | null;
+  vip: boolean;
+  preferences: Json;
+  notes: string | null;
+  created_at: string;
+  updated_at: string;
+}
+interface ReservationRow {
+  id: string;
+  organization_id: string;
+  code: string;
+  guest_id: string;
+  room_id: string | null;
+  room_type_id: string | null;
+  check_in: string;
+  check_out: string;
+  guests_count: number;
+  status: ReservationStatus;
+  source: string;
+  total: number;
+  created_at: string;
+  updated_at: string;
+}
+interface StayRow {
+  id: string;
+  organization_id: string;
+  reservation_id: string;
+  room_id: string;
+  checked_in_at: string;
+  checked_out_at: string | null;
+  created_at: string;
+  updated_at: string;
+}
+interface InvoiceRow {
+  id: string;
+  organization_id: string;
+  number: string;
+  reservation_id: string | null;
+  guest_id: string | null;
+  subtotal: number;
+  gst_rate: number;
+  gst_amount: number;
+  total: number;
+  status: InvoiceStatus;
+  issued_at: string;
+  due_at: string | null;
+  created_at: string;
+  updated_at: string;
+}
+interface PaymentRow {
+  id: string;
+  organization_id: string;
+  invoice_id: string | null;
+  amount: number;
+  method: PaymentMethod;
+  status: PaymentStatus;
+  reference: string | null;
+  paid_at: string;
+  created_at: string;
+  updated_at: string;
+}
+interface HousekeepingTaskRow {
+  id: string;
+  organization_id: string;
+  room_id: string | null;
+  assignee_membership_id: string | null;
+  title: string;
+  priority: TaskPriority;
+  status: TaskStatus;
+  due_at: string | null;
+  notes: string | null;
+  created_at: string;
+  updated_at: string;
+}
+interface AuditLogRow {
+  id: string;
+  organization_id: string;
+  actor_profile_id: string | null;
+  action: string;
+  entity: string;
+  entity_id: string | null;
+  metadata: Json;
+  created_at: string;
+}
+
+type TableShape<Row, RequiredInsert extends keyof Row = never> = {
+  Row: Row;
+  Insert: Partial<Omit<Row, Timestamps | "id">> &
+    Pick<Row, RequiredInsert & keyof Row> & { id?: string };
+  Update: Partial<Omit<Row, Timestamps>>;
+  Relationships: [];
+};
+
+export interface Database {
+  public: {
+    Tables: {
+      profiles: TableShape<ProfileRow, "id" | "email">;
+      organizations: TableShape<OrganizationRow, "name" | "slug" | "created_by">;
+      memberships: TableShape<MembershipRow, "organization_id">;
+      room_types: TableShape<RoomTypeRow, "organization_id" | "name">;
+      rooms: TableShape<RoomRow, "organization_id" | "number">;
+      guests: TableShape<GuestRow, "organization_id" | "full_name">;
+      reservations: TableShape<
+        ReservationRow,
+        "organization_id" | "code" | "guest_id" | "check_in" | "check_out"
+      >;
+      stays: TableShape<
+        StayRow,
+        "organization_id" | "reservation_id" | "room_id"
+      >;
+      invoices: TableShape<InvoiceRow, "organization_id" | "number">;
+      payments: TableShape<PaymentRow, "organization_id" | "amount">;
+      housekeeping_tasks: TableShape<HousekeepingTaskRow, "organization_id">;
+      audit_logs: TableShape<
+        AuditLogRow,
+        "organization_id" | "action" | "entity"
+      >;
+    };
+    Views: Record<string, never>;
+    Functions: {
+      is_org_member: { Args: { org: string }; Returns: boolean };
+      has_org_role: { Args: { org: string; roles: UserRole[] }; Returns: boolean };
+    };
+    Enums: {
+      user_role: UserRole;
+      membership_status: MembershipStatus;
+      room_status: RoomStatus;
+      reservation_status: ReservationStatus;
+      task_status: TaskStatus;
+      task_priority: TaskPriority;
+      payment_status: PaymentStatus;
+      payment_method: PaymentMethod;
+      invoice_status: InvoiceStatus;
+    };
+    CompositeTypes: Record<string, never>;
+  };
+}
+
+// Convenience row aliases
+export type Profile = ProfileRow;
+export type Organization = OrganizationRow;
+export type Membership = MembershipRow;
+export type RoomType = RoomTypeRow;
+export type Room = RoomRow;
+export type Guest = GuestRow;
+export type Reservation = ReservationRow;
+export type Stay = StayRow;
+export type Invoice = InvoiceRow;
+export type Payment = PaymentRow;
+export type HousekeepingTask = HousekeepingTaskRow;
+export type AuditLog = AuditLogRow;

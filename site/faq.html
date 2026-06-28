@@ -1,0 +1,40 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>FAQ · HotelOS</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <script>tailwind.config={theme:{extend:{fontFamily:{sans:['Inter','ui-sans-serif']}}}}</script>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+  <script src="https://unpkg.com/lucide@latest"></script>
+  <style>body{font-family:'Inter',sans-serif}.size-4\.5{width:1.125rem;height:1.125rem}</style>
+</head>
+<body class="bg-[#FAFAFA] text-gray-900 antialiased">
+  <div id="navbar"></div>
+  <section class="px-5 pb-12 pt-16 text-center sm:px-8 sm:pt-24"><div class="mx-auto max-w-3xl" id="head"></div></section>
+  <section class="px-5 pb-16 sm:px-8"><div class="mx-auto max-w-3xl space-y-3" id="list"></div></section>
+  <section class="px-5 pb-24 sm:px-8">
+    <div class="mx-auto max-w-3xl rounded-2xl border border-gray-200 bg-white p-8 text-center shadow-sm">
+      <h3 class="text-xl font-semibold">Still have questions?</h3>
+      <p class="mt-2 text-gray-500">Our team is happy to help you get set up.</p>
+      <a href="contact.html" class="mt-5 inline-flex items-center gap-2 rounded-xl bg-gradient-to-br from-indigo-600 to-violet-600 px-5 py-2.5 text-sm font-semibold text-white">Contact support <i data-lucide="arrow-right" class="size-4"></i></a>
+    </div>
+  </section>
+  <div id="footer"></div>
+  <script src="assets/site.js"></script>
+  <script>
+    const S=window.SITE;
+    document.getElementById("head").innerHTML = S.badge("Help center","life-buoy")+S.sectionHead({title:"Frequently asked questions",sub:"Everything you need to know about HotelOS."});
+    const groups=[
+      ["Getting started",[["How does the free trial work?","You get full access to all Professional features for 14 days, no credit card required. Invite your team and explore everything."],["Is training required?","Most teams are productive in under an hour. We also offer guided onboarding and live chat support."],["Can I import existing data?","Yes — import guests, reservations, and rooms via CSV, or request a white-glove migration."]]],
+      ["Properties & billing",[["Can I manage multiple properties?","Yes, Professional supports up to 3 properties and Enterprise is unlimited, with consolidated reporting."],["Do you support GST invoices?","Yes, billing supports GST-compliant invoices, multiple tax slabs, and downloadable statements."],["Can I change my plan later?","Anytime — upgrades and downgrades are prorated automatically."]]],
+      ["Security & support",[["Is my data secure?","Data is encrypted in transit and at rest. Enterprise adds SSO, role-based access, and audit logs."],["What support do you offer?","Email on Starter, priority on Professional, and 24/7 with an SLA on Enterprise."]]],
+    ];
+    document.getElementById("list").innerHTML = groups.map(([g,items])=>`
+      <div class="pt-4"><h3 class="mb-3 text-sm font-semibold uppercase tracking-wide text-gray-400">${g}</h3>
+      <div class="space-y-3">${items.map(([q,a])=>`<div data-accordion class="rounded-xl border border-gray-200 bg-white"><button class="flex w-full items-center justify-between gap-4 px-5 py-4 text-left"><span class="text-sm font-medium text-gray-900">${q}</span><i data-lucide="chevron-down" data-chevron class="size-4 shrink-0 text-gray-400 transition"></i></button><div data-body class="hidden px-5 pb-4 text-sm leading-relaxed text-gray-500">${a}</div></div>`).join("")}</div></div>`).join("");
+    mountChrome("FAQ");
+  </script>
+</body>
+</html>
