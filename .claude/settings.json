@@ -6,7 +6,21 @@
       "Bash(npm install *)",
       "Bash(cd /d/Github/hotel-demo/app-next && ls node_modules >/dev/null 2>&1 && echo \"node_modules present\" || echo \"not yet\"; cat /c/Users/aniru/AppData/Local/Temp/claude/d--Github-hotel-demo/6b709b17-8c42-41ce-9926-51450995835c/tasks/b7fqrr4bc.output 2>/dev/null | tail -8)",
       "Read(//c/Users/aniru/AppData/Local/Temp/claude/d--Github-hotel-demo/6b709b17-8c42-41ce-9926-51450995835c/tasks/**)",
-      "Bash(npm rebuild *)"
+      "Bash(npm rebuild *)",
+      "Bash(node -e \"console.log\\(require\\('@supabase/supabase-js/package.json'\\).version\\)\")",
+      "Bash(xargs grep -ln \"GenericSchema\")",
+      "Bash(node -e ' *)",
+      "Bash(xargs grep -ln \"export declare function createClient\\\\|GenericSchema\")",
+      "Bash(cat > *)",
+      "Bash(node -e \"let p=require\\('/dev/stdin'\\);console.log\\(Object.keys\\(p.exports||{}\\).filter\\(k=>k.includes\\('dynamic'\\)\\)\\)\")",
+      "Bash(node -e \"const p=require\\('./node_modules/lucide-react/package.json'\\); console.log\\(JSON.stringify\\(Object.keys\\(p.exports\\), null, 0\\)\\)\")",
+      "Bash(npm view *)",
+      "Bash(npx next *)",
+      "Bash(npm run *)",
+      "Bash(psql --version)"
+    ],
+    "additionalDirectories": [
+      "\\tmp"
     ]
   }
 }

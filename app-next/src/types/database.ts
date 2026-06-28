@@ -56,7 +56,7 @@ export type InvoiceStatus =
 /** Helper to derive Insert/Update shapes from a Row. */
 type Timestamps = "created_at" | "updated_at";
 
-interface ProfileRow {
+type ProfileRow = {
   id: string;
   email: string;
   full_name: string | null;
@@ -64,7 +64,7 @@ interface ProfileRow {
   created_at: string;
   updated_at: string;
 }
-interface OrganizationRow {
+type OrganizationRow = {
   id: string;
   name: string;
   slug: string;
@@ -78,7 +78,7 @@ interface OrganizationRow {
   created_at: string;
   updated_at: string;
 }
-interface MembershipRow {
+type MembershipRow = {
   id: string;
   organization_id: string;
   profile_id: string | null;
@@ -90,7 +90,7 @@ interface MembershipRow {
   created_at: string;
   updated_at: string;
 }
-interface RoomTypeRow {
+type RoomTypeRow = {
   id: string;
   organization_id: string;
   name: string;
@@ -101,7 +101,7 @@ interface RoomTypeRow {
   created_at: string;
   updated_at: string;
 }
-interface RoomRow {
+type RoomRow = {
   id: string;
   organization_id: string;
   number: string;
@@ -111,7 +111,7 @@ interface RoomRow {
   created_at: string;
   updated_at: string;
 }
-interface GuestRow {
+type GuestRow = {
   id: string;
   organization_id: string;
   full_name: string;
@@ -124,7 +124,7 @@ interface GuestRow {
   created_at: string;
   updated_at: string;
 }
-interface ReservationRow {
+type ReservationRow = {
   id: string;
   organization_id: string;
   code: string;
@@ -140,7 +140,7 @@ interface ReservationRow {
   created_at: string;
   updated_at: string;
 }
-interface StayRow {
+type StayRow = {
   id: string;
   organization_id: string;
   reservation_id: string;
@@ -150,7 +150,7 @@ interface StayRow {
   created_at: string;
   updated_at: string;
 }
-interface InvoiceRow {
+type InvoiceRow = {
   id: string;
   organization_id: string;
   number: string;
@@ -166,7 +166,7 @@ interface InvoiceRow {
   created_at: string;
   updated_at: string;
 }
-interface PaymentRow {
+type PaymentRow = {
   id: string;
   organization_id: string;
   invoice_id: string | null;
@@ -178,7 +178,7 @@ interface PaymentRow {
   created_at: string;
   updated_at: string;
 }
-interface HousekeepingTaskRow {
+type HousekeepingTaskRow = {
   id: string;
   organization_id: string;
   room_id: string | null;
@@ -191,7 +191,7 @@ interface HousekeepingTaskRow {
   created_at: string;
   updated_at: string;
 }
-interface AuditLogRow {
+type AuditLogRow = {
   id: string;
   organization_id: string;
   actor_profile_id: string | null;
@@ -202,20 +202,45 @@ interface AuditLogRow {
   created_at: string;
 }
 
-type TableShape<Row, RequiredInsert extends keyof Row = never> = {
+type TableShape<
+  Row,
+  RequiredInsert extends keyof Row = never,
+  Rel extends readonly unknown[] = [],
+> = {
   Row: Row;
   Insert: Partial<Omit<Row, Timestamps | "id">> &
     Pick<Row, RequiredInsert & keyof Row> & { id?: string };
   Update: Partial<Omit<Row, Timestamps>>;
-  Relationships: [];
+  Relationships: Rel;
 };
 
-export interface Database {
+type MembershipRelationships = [
+  {
+    foreignKeyName: "memberships_profile_id_fkey";
+    columns: ["profile_id"];
+    isOneToOne: false;
+    referencedRelation: "profiles";
+    referencedColumns: ["id"];
+  },
+  {
+    foreignKeyName: "memberships_organization_id_fkey";
+    columns: ["organization_id"];
+    isOneToOne: false;
+    referencedRelation: "organizations";
+    referencedColumns: ["id"];
+  },
+];
+
+export type Database = {
   public: {
     Tables: {
       profiles: TableShape<ProfileRow, "id" | "email">;
       organizations: TableShape<OrganizationRow, "name" | "slug" | "created_by">;
-      memberships: TableShape<MembershipRow, "organization_id">;
+      memberships: TableShape<
+        MembershipRow,
+        "organization_id",
+        MembershipRelationships
+      >;
       room_types: TableShape<RoomTypeRow, "organization_id" | "name">;
       rooms: TableShape<RoomRow, "organization_id" | "number">;
       guests: TableShape<GuestRow, "organization_id" | "full_name">;

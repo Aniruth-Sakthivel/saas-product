@@ -246,3 +246,61 @@ Indexes on `organization_id` for every table + common filter columns (status, da
 - Cannot run end-to-end here until the user supplies `.env.local` and applies migrations — build/typecheck are the local gates.
 - shadcn/ui + Tailwind v4 requires the canary CLI; pinned versions will be recorded in `package.json`.
 - Email delivery requires a valid `RESEND_API_KEY`; without it, invites fall back to logging the invite link.
+
+---
+
+# Full Product Roadmap — All Phases
+
+The first execution delivers **Foundation + Phase 1** (working) and scaffolds Phases 2–5 as typed stubs. This roadmap is the complete delivery plan across all phases. Every module follows the same architecture: feature folder (`components/ actions/ schemas/ services/ types/ hooks/`), Server Components by default, Server Actions returning `ActionResult<T>`, Zod validation, RBAC + RLS enforcement, and audit logging.
+
+## Roles (RBAC)
+
+| Role | Capabilities (mirrored in `lib/rbac.ts` + RLS) |
+|------|------------------------------------------------|
+| **OWNER** | Full access incl. org delete, billing, staff/roles |
+| **MANAGER** | All operations + staff management + billing (no org delete) |
+| **RECEPTIONIST** | Reservations, front desk, guests, reports |
+| **HOUSEKEEPING** | Housekeeping tasks, room status |
+| **ACCOUNTANT** | Billing, payments, reports |
+
+## Phase 1 — Authentication, Organization, Dashboard ✅ (this build)
+
+- **Authentication**: sign up, login, logout, forgot password, email verification, protected routes (middleware).
+- **Organization**: create hotel (onboarding wizard), invite staff (Resend), staff management, role assignment.
+- **Dashboard**: revenue & occupancy KPI cards, arrivals/departures today, activity feed (from `audit_logs`), revenue/occupancy charts (Recharts).
+
+## Phase 2 — Rooms & Reservations
+
+- **Rooms**: Room Types CRUD, Rooms CRUD, room status management (`AVAILABLE / OCCUPIED / RESERVED / CLEANING / MAINTENANCE`), floor management, card + grid views with filters.
+- **Reservations**: create / edit / cancel reservation, availability check (no double-booking), calendar view, status lifecycle (`PENDING → CONFIRMED → CHECKED_IN → CHECKED_OUT`, plus `CANCELLED`), reservation detail drawer.
+
+## Phase 3 — Front Desk & Guests
+
+- **Front Desk**: check-in, check-out, walk-in booking, active stays board; quick-action cards; writes to `stays` and flips `rooms.status`.
+- **Guests**: guest profiles (CRM), stay history, notes, preferences, profile drawer, search.
+
+## Phase 4 — Billing & Housekeeping
+
+- **Billing**: generate invoices, record payments, payment history, **GST support** (rate + amount on invoices), outstanding vs paid, revenue summary.
+- **Housekeeping**: create tasks, assign to staff, update progress on a board (`PENDING / IN_PROGRESS / INSPECTION / COMPLETED`), priorities, due times.
+
+## Phase 5 — Reports & Notifications
+
+- **Reports**: revenue reports, occupancy reports, guest reports, ADR/RevPAR, channel breakdown, exportable; charts via Recharts.
+- **Notifications**: in-app activity + email notifications via Resend (new reservation, payment received, check-in reminders, housekeeping alerts, weekly digest); user notification preferences in Settings.
+
+## Cross-cutting (all phases)
+
+- **Multi-tenancy**: every business table carries `organization_id`; **RLS** authorizes via `is_org_member` / `has_org_role`; app-layer RBAC mirrors it.
+- **Security**: Row Level Security on all tables, protected routes, Zod-validated + sanitized inputs, audit logging to `audit_logs`.
+- **Storage**: Supabase Storage for hotel logos and guest documents.
+- **Settings** (tabbed): General, Hotel Profile, Staff, Roles, Billing, Notifications.
+- **Responsive & accessible**: desktop full layout, tablet adaptive grids, mobile drawer nav; keyboard navigation; Inter font; Linear/Attio/Vercel-inspired enterprise UI.
+
+## Database tables (all phases)
+
+`organizations`, `profiles`, `memberships`, `room_types`, `rooms`, `guests`, `reservations`, `stays`, `payments`, `invoices`, `housekeeping_tasks`, `audit_logs` — see `supabase/migrations/0001_init.sql` (schema, enums, indexes) and `0002_rls.sql` (policies + helper functions).
+
+## Deployment
+
+Vercel (Next.js), Supabase (Postgres/Auth/Storage), Resend (email). Set the same env vars in the Vercel project as in `.env.local`.
