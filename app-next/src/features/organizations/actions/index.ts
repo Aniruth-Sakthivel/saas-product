@@ -17,6 +17,7 @@ import { writeAuditLog } from "@/lib/audit";
 import { sendInviteEmail } from "@/lib/email/resend";
 import { env } from "@/config/env";
 import { slugify } from "@/lib/utils";
+import { provisionTrialSubscription } from "@/lib/subscriptions";
 import { ROLE_LABELS } from "@/lib/rbac";
 import {
   createOrganizationSchema,
@@ -79,6 +80,10 @@ export async function createOrganizationAction(
     status: "ACTIVE",
   });
   if (memberError) return fail(memberError.message);
+
+  // Start a trial subscription so the org has real entitlements from day one.
+  const trial = await provisionTrialSubscription(org.id);
+  if (!trial.ok) return fail(trial.error);
 
   await writeAuditLog({
     organizationId: org.id,

@@ -8,12 +8,15 @@ import { Label } from "@/components/ui/label";
 import { Tabs, TabsList, TabsTrigger, TabsContent } from "@/components/ui/tabs";
 import { Badge } from "@/components/ui/badge";
 import { PERMISSIONS, ROLES, ROLE_LABELS, can } from "@/lib/rbac";
+import { getSubscriptionOverview } from "@/features/billing/services/subscription";
+import { BillingPanel } from "@/features/billing/components/billing-panel";
 
 export const metadata = { title: "Settings · HotelOS" };
 
 export default async function SettingsPage() {
   const ctx = await requireActiveContext();
   const staff = await listStaff(ctx.organization.id);
+  const billing = await getSubscriptionOverview(ctx.organization.id);
   const canManageStaff = can(ctx.membership.role, "staff:manage");
   const org = ctx.organization;
 
@@ -30,6 +33,7 @@ export default async function SettingsPage() {
           <TabsTrigger value="profile">Hotel Profile</TabsTrigger>
           <TabsTrigger value="staff">Staff</TabsTrigger>
           <TabsTrigger value="roles">Roles</TabsTrigger>
+          <TabsTrigger value="billing">Billing</TabsTrigger>
           <TabsTrigger value="notifications">Notifications</TabsTrigger>
         </TabsList>
 
@@ -112,6 +116,17 @@ export default async function SettingsPage() {
                   </div>
                 </div>
               ))}
+            </CardContent>
+          </Card>
+        </TabsContent>
+
+        <TabsContent value="billing">
+          <Card>
+            <CardHeader>
+              <CardTitle className="text-sm">Plan &amp; billing</CardTitle>
+            </CardHeader>
+            <CardContent>
+              <BillingPanel overview={billing} />
             </CardContent>
           </Card>
         </TabsContent>

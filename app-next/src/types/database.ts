@@ -52,6 +52,13 @@ export type InvoiceStatus =
   | "OVERDUE"
   | "REFUNDED"
   | "CANCELLED";
+export type SubscriptionStatus =
+  | "TRIALING"
+  | "ACTIVE"
+  | "PAST_DUE"
+  | "CANCELED"
+  | "INCOMPLETE";
+export type BillingInterval = "MONTHLY" | "YEARLY";
 
 /** Helper to derive Insert/Update shapes from a Row. */
 type Timestamps = "created_at" | "updated_at";
@@ -202,6 +209,39 @@ type AuditLogRow = {
   created_at: string;
 }
 
+type PlanRow = {
+  id: string;
+  code: string;
+  name: string;
+  description: string | null;
+  price_monthly: number;
+  price_yearly: number;
+  currency: string;
+  features: Json;
+  limits: Json;
+  stripe_product_id: string | null;
+  stripe_price_monthly_id: string | null;
+  stripe_price_yearly_id: string | null;
+  is_active: boolean;
+  sort_order: number;
+  created_at: string;
+  updated_at: string;
+}
+type SubscriptionRow = {
+  id: string;
+  organization_id: string;
+  plan_id: string;
+  status: SubscriptionStatus;
+  interval: BillingInterval;
+  trial_ends_at: string | null;
+  current_period_end: string | null;
+  cancel_at_period_end: boolean;
+  stripe_customer_id: string | null;
+  stripe_subscription_id: string | null;
+  created_at: string;
+  updated_at: string;
+}
+
 type TableShape<
   Row,
   RequiredInsert extends keyof Row = never,
@@ -259,11 +299,17 @@ export type Database = {
         AuditLogRow,
         "organization_id" | "action" | "entity"
       >;
+      plans: TableShape<PlanRow, "code" | "name">;
+      subscriptions: TableShape<
+        SubscriptionRow,
+        "organization_id" | "plan_id"
+      >;
     };
     Views: Record<string, never>;
     Functions: {
       is_org_member: { Args: { org: string }; Returns: boolean };
       has_org_role: { Args: { org: string; roles: UserRole[] }; Returns: boolean };
+      org_has_feature: { Args: { org: string; feature: string }; Returns: boolean };
     };
     Enums: {
       user_role: UserRole;
@@ -275,6 +321,8 @@ export type Database = {
       payment_status: PaymentStatus;
       payment_method: PaymentMethod;
       invoice_status: InvoiceStatus;
+      subscription_status: SubscriptionStatus;
+      billing_interval: BillingInterval;
     };
     CompositeTypes: Record<string, never>;
   };
@@ -293,3 +341,5 @@ export type Invoice = InvoiceRow;
 export type Payment = PaymentRow;
 export type HousekeepingTask = HousekeepingTaskRow;
 export type AuditLog = AuditLogRow;
+export type Plan = PlanRow;
+export type Subscription = SubscriptionRow;

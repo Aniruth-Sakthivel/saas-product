@@ -4,6 +4,7 @@ import { useRouter } from "next/navigation";
 import {
   Bell,
   ChevronsUpDown,
+  LayoutGrid,
   LogOut,
   Menu,
   PanelLeft,
@@ -143,6 +144,10 @@ export function Topbar({
               </span>
             </DropdownMenuLabel>
             <DropdownMenuSeparator />
+            <DropdownMenuItem onClick={() => router.push("/portal")}>
+              <LayoutGrid className="size-4" />
+              Customer Portal
+            </DropdownMenuItem>
             <DropdownMenuItem onClick={() => router.push("/settings")}>
               <SettingsIcon className="size-4" />
               Settings

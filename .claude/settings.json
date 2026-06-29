@@ -17,7 +17,13 @@
       "Bash(npm view *)",
       "Bash(npx next *)",
       "Bash(npm run *)",
-      "Bash(psql --version)"
+      "Bash(psql --version)",
+      "Bash(npx tsx *)",
+      "Bash(npx --prefix d:/Github/hotel-demo/app-next tsx d:/Github/hotel-demo/app-next/supabase/migrate.ts)",
+      "Bash(echo \"EXIT:$?\")",
+      "Bash(npx tsx -e ' *)",
+      "Bash(node ./_check.mjs)",
+      "Bash(echo \"TC_EXIT:$?\")"
     ],
     "additionalDirectories": [
       "\\tmp"

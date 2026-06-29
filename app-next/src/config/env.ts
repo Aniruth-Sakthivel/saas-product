@@ -21,6 +21,12 @@ export const env = {
   resendApiKey: process.env.RESEND_API_KEY ?? "",
   resendFrom: process.env.RESEND_FROM_EMAIL ?? "HotelOS <onboarding@resend.dev>",
   appUrl: process.env.NEXT_PUBLIC_APP_URL ?? "http://localhost:3000",
+  get stripeSecretKey() {
+    return required("STRIPE_SECRET_KEY", process.env.STRIPE_SECRET_KEY);
+  },
+  get stripeWebhookSecret() {
+    return required("STRIPE_WEBHOOK_SECRET", process.env.STRIPE_WEBHOOK_SECRET);
+  },
 } as const;
 
 export function assertSupabasePublicEnv() {
