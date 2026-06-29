@@ -32,7 +32,8 @@ export const PRODUCTS: ProductDef[] = [
     description: "Companies, contacts, leads and deals.",
     icon: "users",
     feature: "crm",
-    status: "soon",
+    href: "/crm",
+    status: "live",
   },
   {
     key: "school",

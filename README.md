@@ -62,11 +62,11 @@ Derived from the Multi-Product SaaS Platform Blueprint:
 | 2 | Multi-Tenant Architecture (hardening, FORCE RLS, guards) | ✅ Complete |
 | 3 | Subscription & Billing (plans, entitlements, Stripe) | ✅ Complete |
 | 4 | Customer Portal (in-app `/portal` hub) | ✅ Complete |
-| 5 | Super Admin Platform (`admin.company.com`) | 🔜 Next |
-| 6 | Mobile Application (React Native + Expo) | Planned |
-| 7 | Analytics & Notifications services | Planned |
-| 8 | Additional Products (CRM, School, Inventory) | Planned |
-| 9 | Scaling Infrastructure (Redis, queues, read replicas) | Planned |
+| 5 | Super Admin Platform (in-app `/admin`) | ✅ Complete |
+| 6 | Mobile Application (Expo, in `mobile/`) | ✅ Complete |
+| 7 | Analytics & Notifications services | ✅ Complete |
+| 8 | Additional Products (CRM live; School, Inventory) | ✅ CRM complete |
+| 9 | Scaling Infrastructure (cache layer + triggers) | ✅ Foundation ready |
 
 ### Phase checklist
 
@@ -77,11 +77,11 @@ Derived from the Multi-Product SaaS Platform Blueprint:
   - [x] 14-day trial auto-provisioned at onboarding (+ backfill) and surfaced in Settings → Billing
   - [x] Stripe (test): `stripe:sync` products/prices, Checkout action, `/api/billing/webhook` → subscription status, upgrade buttons
 - [x] **Phase 4** — Customer Portal: in-app `/portal` hub (My Products, Billing, Organization); SSO via shared Supabase session. Monorepo split deferred to Phase 8 (second product)
-- [ ] **Phase 5** — Super Admin Platform: orgs, plans, payments, feature flags, audit viewer
-- [ ] **Phase 6** — Mobile App (React Native + Expo): shared api-client, offline, push
-- [ ] **Phase 7** — Analytics & Notifications services (`notify()` interface, revenue/churn analytics)
-- [ ] **Phase 8** — Additional products (CRM first, then School, Inventory) reusing platform services
-- [ ] **Phase 9** — Scaling infrastructure: Redis, queues, read replicas (metric-triggered)
+- [x] **Phase 5** — Super Admin Platform: `/admin` control plane (platform-admin gate, cross-tenant dashboard/MRR, organizations, plans, audit viewer). Grant via `npm run admin:grant <email>`
+- [x] **Phase 6** — Mobile App (Expo Router + Supabase) in [`mobile/`](mobile/): auth, dashboard KPIs, reservations list against the same backend. Offline/push deferred
+- [x] **Phase 7** — Analytics & Notifications: channel-based `notify()` (email live via Resend; SMS/push stubs) + template registry; admin `/admin/analytics` (MRR, growth, plan distribution, churn)
+- [x] **Phase 8** — CRM product (`/crm`): companies/contacts/deals pipeline, gated by the `crm` entitlement, reusing auth/RLS/portal/notifications. School & Inventory follow the same pattern. Monorepo split still deferred (one deploy target)
+- [x] **Phase 9** — Scaling: swappable `cached()` layer (in-process now, Redis-ready) on heavy cross-tenant reads + documented metric-based triggers in [docs/SCALING.md](docs/SCALING.md)
 
 ### Guiding principles
 - Build platform services once; keep product services independent.

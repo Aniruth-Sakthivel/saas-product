@@ -14,7 +14,7 @@ import { assertRole } from "@/lib/auth";
 import { ok, fail, type ActionResult } from "@/lib/errors";
 import { parseInput } from "@/lib/validation";
 import { writeAuditLog } from "@/lib/audit";
-import { sendInviteEmail } from "@/lib/email/resend";
+import { notify } from "@/lib/notifications";
 import { env } from "@/config/env";
 import { slugify } from "@/lib/utils";
 import { provisionTrialSubscription } from "@/lib/subscriptions";
@@ -133,13 +133,17 @@ export async function inviteStaffAction(
   if (error) return fail(error.message);
 
   const acceptUrl = `${env.appUrl}/api/invites/accept?token=${token}`;
-  const result = await sendInviteEmail({
-    to: parsed.data.email,
-    organizationName: ctx.organization.name,
-    inviterName: ctx.profile?.full_name ?? "A teammate",
-    role: ROLE_LABELS[parsed.data.role],
-    acceptUrl,
+  const results = await notify({
+    to: { email: parsed.data.email },
+    template: "staff_invite",
+    data: {
+      organizationName: ctx.organization.name,
+      inviterName: ctx.profile?.full_name ?? "A teammate",
+      role: ROLE_LABELS[parsed.data.role],
+      acceptUrl,
+    },
   });
+  const delivered = results.some((r) => r.delivered);
 
   await writeAuditLog({
     organizationId: ctx.organization.id,
@@ -150,7 +154,7 @@ export async function inviteStaffAction(
   });
 
   revalidatePath("/settings");
-  return ok({ delivered: result.delivered, url: result.url });
+  return ok({ delivered, url: acceptUrl });
 }
 
 export async function updateMembershipRoleAction(

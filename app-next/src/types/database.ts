@@ -59,6 +59,13 @@ export type SubscriptionStatus =
   | "CANCELED"
   | "INCOMPLETE";
 export type BillingInterval = "MONTHLY" | "YEARLY";
+export type DealStage =
+  | "LEAD"
+  | "QUALIFIED"
+  | "PROPOSAL"
+  | "NEGOTIATION"
+  | "WON"
+  | "LOST";
 
 /** Helper to derive Insert/Update shapes from a Row. */
 type Timestamps = "created_at" | "updated_at";
@@ -242,6 +249,47 @@ type SubscriptionRow = {
   updated_at: string;
 }
 
+type PlatformAdminRow = {
+  profile_id: string;
+  note: string | null;
+  created_at: string;
+}
+type CrmCompanyRow = {
+  id: string;
+  organization_id: string;
+  name: string;
+  website: string | null;
+  industry: string | null;
+  city: string | null;
+  notes: string | null;
+  created_at: string;
+  updated_at: string;
+}
+type CrmContactRow = {
+  id: string;
+  organization_id: string;
+  company_id: string | null;
+  full_name: string;
+  email: string | null;
+  phone: string | null;
+  title: string | null;
+  created_at: string;
+  updated_at: string;
+}
+type CrmDealRow = {
+  id: string;
+  organization_id: string;
+  company_id: string | null;
+  contact_id: string | null;
+  title: string;
+  value: number;
+  stage: DealStage;
+  owner_membership_id: string | null;
+  expected_close: string | null;
+  created_at: string;
+  updated_at: string;
+}
+
 type TableShape<
   Row,
   RequiredInsert extends keyof Row = never,
@@ -304,12 +352,17 @@ export type Database = {
         SubscriptionRow,
         "organization_id" | "plan_id"
       >;
+      platform_admins: TableShape<PlatformAdminRow, "profile_id">;
+      crm_companies: TableShape<CrmCompanyRow, "organization_id" | "name">;
+      crm_contacts: TableShape<CrmContactRow, "organization_id" | "full_name">;
+      crm_deals: TableShape<CrmDealRow, "organization_id" | "title">;
     };
     Views: Record<string, never>;
     Functions: {
       is_org_member: { Args: { org: string }; Returns: boolean };
       has_org_role: { Args: { org: string; roles: UserRole[] }; Returns: boolean };
       org_has_feature: { Args: { org: string; feature: string }; Returns: boolean };
+      is_platform_admin: { Args: Record<string, never>; Returns: boolean };
     };
     Enums: {
       user_role: UserRole;
@@ -323,6 +376,7 @@ export type Database = {
       invoice_status: InvoiceStatus;
       subscription_status: SubscriptionStatus;
       billing_interval: BillingInterval;
+      deal_stage: DealStage;
     };
     CompositeTypes: Record<string, never>;
   };
@@ -343,3 +397,6 @@ export type HousekeepingTask = HousekeepingTaskRow;
 export type AuditLog = AuditLogRow;
 export type Plan = PlanRow;
 export type Subscription = SubscriptionRow;
+export type CrmCompany = CrmCompanyRow;
+export type CrmContact = CrmContactRow;
+export type CrmDeal = CrmDealRow;

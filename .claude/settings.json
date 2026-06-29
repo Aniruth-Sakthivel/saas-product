@@ -23,7 +23,8 @@
       "Bash(echo \"EXIT:$?\")",
       "Bash(npx tsx -e ' *)",
       "Bash(node ./_check.mjs)",
-      "Bash(echo \"TC_EXIT:$?\")"
+      "Bash(echo \"TC_EXIT:$?\")",
+      "Bash(echo \"TC:$?\")"
     ],
     "additionalDirectories": [
       "\\tmp"

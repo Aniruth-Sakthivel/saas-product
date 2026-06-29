@@ -12,7 +12,9 @@
     "migrate": "tsx supabase/migrate.ts",
     "seed": "tsx supabase/seed.ts",
     "verify:rls": "tsx supabase/verify-rls.ts",
-    "stripe:sync": "tsx supabase/stripe-sync.ts"
+    "stripe:sync": "tsx supabase/stripe-sync.ts",
+    "admin:grant": "tsx supabase/admin-grant.ts grant",
+    "admin:list": "tsx supabase/admin-grant.ts list"
   },
   "dependencies": {
     "@hookform/resolvers": "^3.9.1",

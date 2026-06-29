@@ -1,0 +1,22 @@
+{
+  "expo": {
+    "name": "HotelOS",
+    "slug": "hotelos-mobile",
+    "version": "0.1.0",
+    "orientation": "portrait",
+    "scheme": "hotelos",
+    "userInterfaceStyle": "automatic",
+    "newArchEnabled": true,
+    "ios": {
+      "supportsTablet": true,
+      "bundleIdentifier": "com.hotelos.mobile"
+    },
+    "android": {
+      "package": "com.hotelos.mobile"
+    },
+    "plugins": ["expo-router"],
+    "experiments": {
+      "typedRoutes": true
+    }
+  }
+}

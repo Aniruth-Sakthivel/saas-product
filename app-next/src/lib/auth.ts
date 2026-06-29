@@ -3,6 +3,7 @@ import { redirect } from "next/navigation";
 import { createClient } from "@/lib/supabase/server";
 import { AuthenticationError, AuthorizationError } from "@/lib/errors";
 import { hasAnyRole } from "@/lib/rbac";
+import { hasFeature, type FeatureKey } from "@/lib/entitlements";
 import type {
   Membership,
   Organization,
@@ -97,4 +98,18 @@ export async function requireActiveContext(): Promise<ActiveContext> {
 /** Guard used inside Server Actions: throws when role is insufficient. */
 export function assertRole(role: UserRole, allowed: UserRole[]) {
   if (!hasAnyRole(role, allowed)) throw new AuthorizationError();
+}
+
+/**
+ * Like requireActiveContext but also requires the org's plan to include
+ * `feature`. Redirects to the portal billing page when not entitled. Used to
+ * gate product areas (e.g. CRM) behind an entitlement.
+ */
+export async function requireFeatureContext(
+  feature: FeatureKey,
+): Promise<ActiveContext> {
+  const ctx = await requireActiveContext();
+  const allowed = await hasFeature(ctx.organization.id, feature);
+  if (!allowed) redirect("/portal/billing");
+  return ctx;
 }
