@@ -75,6 +75,85 @@ export async function listOrganizations(): Promise<OrgRow[]> {
   });
 }
 
+/** All plans ordered for the catalog / admin management table. */
+export async function listPlans(): Promise<Plan[]> {
+  const supabase = createAdminClient();
+  const { data } = await supabase
+    .from("plans")
+    .select("*")
+    .order("sort_order", { ascending: true });
+  return (data ?? []) as Plan[];
+}
+
+export type OrgDetail = {
+  organization: Organization;
+  plan: Plan | null;
+  subscription: Subscription | null;
+  counts: { staff: number; rooms: number; reservations: number; guests: number };
+  ownerEmail: string | null;
+};
+
+/** Full profile for a single tenant, for the admin org detail page. */
+export async function getOrganizationDetail(
+  organizationId: string,
+): Promise<OrgDetail | null> {
+  const supabase = createAdminClient();
+  const { data: org } = await supabase
+    .from("organizations")
+    .select("*")
+    .eq("id", organizationId)
+    .maybeSingle();
+  if (!org) return null;
+
+  const [sub, staff, rooms, reservations, guests, owner] = await Promise.all([
+    supabase
+      .from("subscriptions")
+      .select("*")
+      .eq("organization_id", organizationId)
+      .maybeSingle(),
+    supabase
+      .from("memberships")
+      .select("id", { count: "exact", head: true })
+      .eq("organization_id", organizationId),
+    supabase
+      .from("rooms")
+      .select("id", { count: "exact", head: true })
+      .eq("organization_id", organizationId),
+    supabase
+      .from("reservations")
+      .select("id", { count: "exact", head: true })
+      .eq("organization_id", organizationId),
+    supabase
+      .from("guests")
+      .select("id", { count: "exact", head: true })
+      .eq("organization_id", organizationId),
+    supabase.from("profiles").select("email").eq("id", org.created_by).maybeSingle(),
+  ]);
+
+  let plan: Plan | null = null;
+  if (sub.data) {
+    const { data: p } = await supabase
+      .from("plans")
+      .select("*")
+      .eq("id", sub.data.plan_id)
+      .maybeSingle();
+    plan = (p as Plan) ?? null;
+  }
+
+  return {
+    organization: org as Organization,
+    plan,
+    subscription: (sub.data as Subscription) ?? null,
+    counts: {
+      staff: staff.count ?? 0,
+      rooms: rooms.count ?? 0,
+      reservations: reservations.count ?? 0,
+      guests: guests.count ?? 0,
+    },
+    ownerEmail: owner.data?.email ?? null,
+  };
+}
+
 /** Recent audit-log entries across all tenants, with org name + actor email. */
 export async function recentAuditLogs(limit = 50) {
   const supabase = createAdminClient();

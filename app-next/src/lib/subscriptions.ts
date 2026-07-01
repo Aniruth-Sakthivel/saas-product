@@ -1,4 +1,6 @@
 import { createClient } from "@/lib/supabase/server";
+import type { SupabaseClient } from "@supabase/supabase-js";
+import type { Database } from "@/types/database";
 
 /** Plan new organizations trial on, and how long the trial lasts. */
 export const TRIAL_PLAN_CODE = "pro";
@@ -14,8 +16,9 @@ export const TRIAL_DAYS = 14;
  */
 export async function provisionTrialSubscription(
   organizationId: string,
+  client?: SupabaseClient<Database>,
 ): Promise<{ ok: true } | { ok: false; error: string }> {
-  const supabase = await createClient();
+  const supabase = client ?? (await createClient());
 
   const { data: plan, error: planError } = await supabase
     .from("plans")

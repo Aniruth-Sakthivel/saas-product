@@ -6,6 +6,8 @@ import type { Database } from "@/types/database";
 type CookieToSet = { name: string; value: string; options: CookieOptions };
 
 const PUBLIC_PATHS = [
+  "/", // root routes visitors to the public landing (see app/page.tsx)
+  "/hotel", // guest-facing landing + booking pages
   "/login",
   "/signup",
   "/forgot-password",

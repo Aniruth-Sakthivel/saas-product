@@ -5,6 +5,7 @@ import { cookies } from "next/headers";
 import { redirect } from "next/navigation";
 import { revalidatePath } from "next/cache";
 import { createClient } from "@/lib/supabase/server";
+import { createAdminClient } from "@/lib/supabase/admin";
 import {
   ACTIVE_ORG_COOKIE,
   requireActiveContext,
@@ -44,7 +45,11 @@ export async function createOrganizationAction(
   });
   if (!parsed.success) return parsed.result;
 
-  const supabase = await createClient();
+  // Onboarding is a privileged bootstrap: the user has no organization or
+  // membership yet, so RLS policies that authorize via membership can't apply.
+  // Use the service-role client for these first writes (safe: the user is
+  // authenticated and we set created_by / profile_id to their own id).
+  const supabase = createAdminClient();
 
   // Ensure a profile row exists (covers signups created before the trigger).
   await supabase
@@ -82,7 +87,7 @@ export async function createOrganizationAction(
   if (memberError) return fail(memberError.message);
 
   // Start a trial subscription so the org has real entitlements from day one.
-  const trial = await provisionTrialSubscription(org.id);
+  const trial = await provisionTrialSubscription(org.id, supabase);
   if (!trial.ok) return fail(trial.error);
 
   await writeAuditLog({

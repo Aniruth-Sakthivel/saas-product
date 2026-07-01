@@ -1,7 +1,9 @@
+import Link from "next/link";
 import { listOrganizations } from "@/features/admin/services";
 import { PageHeader } from "@/components/page-header";
 import { Badge } from "@/components/ui/badge";
 import { Card } from "@/components/ui/card";
+import { OrgRowActions } from "@/features/admin/components/org-row-actions";
 import {
   Table,
   TableBody,
@@ -30,12 +32,20 @@ export default async function AdminOrganizationsPage() {
               <TableHead>Plan</TableHead>
               <TableHead>Status</TableHead>
               <TableHead>Created</TableHead>
+              <TableHead className="w-10" />
             </TableRow>
           </TableHeader>
           <TableBody>
             {orgs.map(({ organization, plan, status }) => (
               <TableRow key={organization.id}>
-                <TableCell className="font-medium">{organization.name}</TableCell>
+                <TableCell className="font-medium">
+                  <Link
+                    href={`/admin/organizations/${organization.id}`}
+                    className="hover:underline"
+                  >
+                    {organization.name}
+                  </Link>
+                </TableCell>
                 <TableCell>{plan?.name ?? "—"}</TableCell>
                 <TableCell>
                   {status ? (
@@ -48,6 +58,12 @@ export default async function AdminOrganizationsPage() {
                 </TableCell>
                 <TableCell className="text-muted-foreground">
                   {new Date(organization.created_at).toLocaleDateString()}
+                </TableCell>
+                <TableCell>
+                  <OrgRowActions
+                    organizationId={organization.id}
+                    name={organization.name}
+                  />
                 </TableCell>
               </TableRow>
             ))}
