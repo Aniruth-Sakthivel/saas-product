@@ -2,7 +2,6 @@
 
 import { useRouter } from "next/navigation";
 import {
-  Bell,
   ChevronsUpDown,
   LayoutGrid,
   LogOut,
@@ -26,7 +25,8 @@ import { switchOrganization } from "@/lib/actions/session";
 import { useUIStore } from "@/store/ui-store";
 import { initialsFromName } from "@/lib/utils";
 import { ROLE_LABELS } from "@/lib/rbac";
-import type { UserRole } from "@/types/database";
+import { NotificationBell } from "@/features/notifications/components/notification-bell";
+import type { Notification, UserRole } from "@/types/database";
 
 interface OrgOption {
   id: string;
@@ -37,16 +37,20 @@ interface TopbarProps {
   userName: string;
   userEmail: string;
   orgName: string;
+  orgId: string;
   role: UserRole;
   organizations: OrgOption[];
+  notifications: Notification[];
 }
 
 export function Topbar({
   userName,
   userEmail,
   orgName,
+  orgId,
   role,
   organizations,
+  notifications,
 }: TopbarProps) {
   const router = useRouter();
   const toggleSidebar = useUIStore((s) => s.toggleSidebar);
@@ -60,7 +64,7 @@ export function Topbar({
   }
 
   return (
-    <header className="sticky top-0 z-30 flex h-16 items-center gap-3 border-b bg-background/80 px-4 backdrop-blur sm:px-6">
+    <header className="sticky top-0 z-30 flex h-16 items-center gap-3 border-b bg-background/70 px-4 backdrop-blur-xl sm:px-6">
       <Button
         variant="ghost"
         size="icon"
@@ -80,24 +84,19 @@ export function Topbar({
         <PanelLeft className="size-5" />
       </Button>
 
-      <div className="mx-auto hidden w-full max-w-md items-center gap-2 rounded-lg border bg-muted/50 px-3 py-2 text-sm text-muted-foreground md:flex">
+      <div className="mx-auto hidden w-full max-w-md items-center gap-2 rounded-xl border bg-muted/40 px-3 py-2 text-sm text-muted-foreground transition-colors focus-within:border-primary/40 focus-within:bg-background focus-within:ring-2 focus-within:ring-primary/15 md:flex">
         <Search className="size-4" />
         <input
           placeholder="Search guests, rooms, reservations…"
           className="w-full bg-transparent text-foreground placeholder:text-muted-foreground focus:outline-none"
         />
-        <kbd className="rounded border bg-background px-1.5 py-0.5 text-[10px] font-medium">
+        <kbd className="rounded-md border bg-background px-1.5 py-0.5 text-[10px] font-medium shadow-sm">
           ⌘K
         </kbd>
       </div>
 
       <div className="ml-auto flex items-center gap-1">
-        <Button variant="ghost" size="icon" aria-label="Notifications">
-          <span className="relative">
-            <Bell className="size-5" />
-            <span className="absolute -right-0.5 -top-0.5 size-2 rounded-full bg-destructive ring-2 ring-background" />
-          </span>
-        </Button>
+        <NotificationBell organizationId={orgId} initial={notifications} />
 
         {organizations.length > 0 && (
           <DropdownMenu>

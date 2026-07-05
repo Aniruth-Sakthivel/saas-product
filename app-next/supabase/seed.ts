@@ -40,6 +40,35 @@ const supabase = createClient<Database>(url, serviceKey, {
 const OWNER_EMAIL = "owner@grandmarina.test";
 const OWNER_PASSWORD = "Passw0rd!";
 
+/** Shared password + one login per role for testing role-based access. */
+const TEST_PASSWORD = "Passw0rd!";
+const TEST_USERS: Array<{
+  email: string;
+  password: string;
+  fullName: string;
+  role: "MANAGER" | "RECEPTIONIST" | "HOUSEKEEPING" | "ACCOUNTANT";
+}> = [
+  { email: "manager@grandmarina.test", password: TEST_PASSWORD, fullName: "Maya Manager", role: "MANAGER" },
+  { email: "receptionist@grandmarina.test", password: TEST_PASSWORD, fullName: "Ravi Receptionist", role: "RECEPTIONIST" },
+  { email: "housekeeping@grandmarina.test", password: TEST_PASSWORD, fullName: "Hina Housekeeper", role: "HOUSEKEEPING" },
+  { email: "accountant@grandmarina.test", password: TEST_PASSWORD, fullName: "Amir Accountant", role: "ACCOUNTANT" },
+];
+
+/** Creates (or finds) an auth user, returns its id. */
+async function ensureUser(email: string, password: string, fullName: string) {
+  const created = await supabase.auth.admin.createUser({
+    email,
+    password,
+    email_confirm: true,
+    user_metadata: { full_name: fullName },
+  });
+  if (created.data.user) return created.data.user.id;
+  const list = await supabase.auth.admin.listUsers();
+  const existing = list.data.users.find((u) => u.email === email);
+  if (!existing) throw created.error ?? new Error(`Could not create ${email}`);
+  return existing.id;
+}
+
 const pick = <T>(arr: T[]) => arr[Math.floor(Math.random() * arr.length)];
 const rint = (min: number, max: number) =>
   Math.floor(Math.random() * (max - min + 1)) + min;
@@ -89,12 +118,19 @@ async function main() {
     full_name: "Aniruth R.",
   });
 
+  // Stable, memorable slug so the public site is always at /hotel/grand-marina.
+  // Remove any prior seeded org first (cascades to its rooms, guests,
+  // reservations, invoices, notifications, memberships) so reseeding is clean.
+  const SLUG = "grand-marina";
+  console.log("→ Resetting existing demo organization…");
+  await supabase.from("organizations").delete().eq("slug", SLUG);
+
   console.log("→ Creating organization…");
   const { data: org, error: orgErr } = await supabase
     .from("organizations")
     .insert({
       name: "Grand Marina Hotel",
-      slug: `grand-marina-${Date.now().toString(36)}`,
+      slug: SLUG,
       type: "Resort",
       address: "120 Harbor View Blvd, Miami, FL",
       currency: "USD",
@@ -113,6 +149,27 @@ async function main() {
     role: "OWNER",
     status: "ACTIVE",
   });
+
+  console.log("→ Creating one test user per role…");
+  for (const u of TEST_USERS) {
+    const id = await ensureUser(u.email, u.password, u.fullName);
+    await supabase.from("profiles").upsert({
+      id,
+      email: u.email,
+      full_name: u.fullName,
+    });
+    await supabase
+      .from("memberships")
+      .upsert(
+        {
+          organization_id: orgId,
+          profile_id: id,
+          role: u.role,
+          status: "ACTIVE",
+        },
+        { onConflict: "organization_id,profile_id" },
+      );
+  }
 
   console.log("→ Room types & rooms 101–150…");
   const { data: types } = await supabase
@@ -246,7 +303,16 @@ async function main() {
 
   console.log("\n✅ Seed complete.");
   console.log(`   Organization: ${org.name} (${orgId})`);
-  console.log(`   Owner login:  ${OWNER_EMAIL} / ${OWNER_PASSWORD}`);
+  console.log("\n   Test logins (all share the same organization):");
+  console.log(`   OWNER         ${OWNER_EMAIL} / ${OWNER_PASSWORD}`);
+  for (const u of TEST_USERS) {
+    console.log(
+      `   ${u.role.padEnd(13)} ${u.email} / ${u.password}`,
+    );
+  }
+  console.log("\n   Public site:");
+  console.log(`   Landing  http://localhost:3000/hotel/${SLUG}`);
+  console.log(`   Book     http://localhost:3000/hotel/${SLUG}/book`);
 }
 
 main().catch((err) => {

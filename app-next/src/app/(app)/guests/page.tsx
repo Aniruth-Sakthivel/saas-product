@@ -1,15 +1,25 @@
-import { ComingSoon } from "@/components/coming-soon";
+import { requirePermission } from "@/lib/auth";
+import { listGuests } from "@/features/guests/services";
+import { CustomersTable } from "@/features/guests/components/customers-table";
+import { PageHeader } from "@/components/page-header";
 
-export const metadata = { title: "Guests · HotelOS" };
+export const metadata = { title: "Customers · HotelOS" };
 
-export default function GuestsPage() {
+export default async function GuestsPage() {
+  const ctx = await requirePermission("guests:manage");
+  const guests = await listGuests(ctx.organization.id);
+
   return (
-    <ComingSoon
-      title="Guests"
-      description="A CRM for your guests."
-      phase="Phase 3"
-      icon="users"
-      features={["Profiles", "Stay history", "Preferences", "Notes"]}
-    />
+    <div className="space-y-5">
+      <PageHeader
+        title="Customers"
+        description="Everyone who has booked or stayed with you, synced from every booking."
+      />
+      <CustomersTable
+        organizationId={ctx.organization.id}
+        currency={ctx.organization.currency}
+        guests={guests}
+      />
+    </div>
   );
 }

@@ -24,7 +24,8 @@
       "Bash(npx tsx -e ' *)",
       "Bash(node ./_check.mjs)",
       "Bash(echo \"TC_EXIT:$?\")",
-      "Bash(echo \"TC:$?\")"
+      "Bash(echo \"TC:$?\")",
+      "PowerShell(cd d:\\\\Github\\\\hotel-demo\\\\app-next; try { Remove-Item -Recurse -Force .next -ErrorAction Stop; \"removed .next\" } catch { \"COULD NOT REMOVE \\(dev server likely still running\\): $\\($_.Exception.Message\\)\" })"
     ],
     "additionalDirectories": [
       "\\tmp"

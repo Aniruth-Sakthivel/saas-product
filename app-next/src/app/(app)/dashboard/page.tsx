@@ -43,22 +43,26 @@ export default async function DashboardPage() {
           label="Occupancy"
           value={`${data.occupancyRate}%`}
           icon="bed-double"
+          tone="indigo"
           sub={`${data.occupiedRooms} of ${data.totalRooms} rooms`}
         />
         <KpiCard
           label="Revenue today"
           value={formatCurrency(data.revenueToday, currency)}
           icon="banknote"
+          tone="emerald"
         />
         <KpiCard
           label="Arrivals today"
           value={data.arrivalsToday}
           icon="log-in"
+          tone="sky"
         />
         <KpiCard
           label="Departures today"
           value={data.departuresToday}
           icon="log-out"
+          tone="amber"
         />
       </div>
 

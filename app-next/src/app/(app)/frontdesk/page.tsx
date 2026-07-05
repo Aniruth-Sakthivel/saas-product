@@ -1,15 +1,27 @@
-import { ComingSoon } from "@/components/coming-soon";
+import { requirePermission } from "@/lib/auth";
+import { can } from "@/lib/rbac";
+import { getFrontDeskData } from "@/features/frontdesk/services";
+import { FrontDeskBoard } from "@/features/frontdesk/components/frontdesk-board";
+import { PageHeader } from "@/components/page-header";
 
 export const metadata = { title: "Front Desk · HotelOS" };
 
-export default function FrontDeskPage() {
+export default async function FrontDeskPage() {
+  const ctx = await requirePermission("frontdesk:operate");
+  const data = await getFrontDeskData(ctx.organization.id);
+  const canOperate = can(ctx.membership.role, "frontdesk:operate");
+
   return (
-    <ComingSoon
-      title="Front Desk"
-      description="The operational center for arrivals and departures."
-      phase="Phase 3"
-      icon="concierge-bell"
-      features={["Check-in", "Check-out", "Walk-in booking", "Active stays"]}
-    />
+    <div className="space-y-5">
+      <PageHeader
+        title="Front Desk"
+        description="Arrivals, in-house guests and departures — check in and out in real time."
+      />
+      <FrontDeskBoard
+        organizationId={ctx.organization.id}
+        data={data}
+        canOperate={canOperate}
+      />
+    </div>
   );
 }

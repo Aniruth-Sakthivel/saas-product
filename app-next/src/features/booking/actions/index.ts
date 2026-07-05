@@ -5,6 +5,8 @@ import { createAdminClient } from "@/lib/supabase/admin";
 import { ok, fail, type ActionResult } from "@/lib/errors";
 import { parseInput } from "@/lib/validation";
 import { notify } from "@/lib/notifications";
+import { createNotification } from "@/features/notifications/services";
+import { formatCurrency } from "@/lib/utils";
 import {
   getHotelBySlug,
   getAvailability,
@@ -153,6 +155,28 @@ export async function createPublicBookingAction(
       code: reservation.code,
       email: data.email,
       invoiceNumber,
+    },
+  });
+
+  // Notify the admin panel in real time about the new booking.
+  await createNotification(supabase, {
+    organizationId: hotel.id,
+    type: "booking",
+    title: `New booking · ${match.roomType.name}`,
+    body: `${data.fullName} booked ${match.roomType.name} for ${data.checkIn} → ${data.checkOut} (${formatCurrency(server.total, hotel.currency)})`,
+    entity: "reservation",
+    entityId: reservation.id,
+    metadata: {
+      code: reservation.code,
+      guestName: data.fullName,
+      guestEmail: data.email,
+      roomType: match.roomType.name,
+      checkIn: data.checkIn,
+      checkOut: data.checkOut,
+      guests: data.guests,
+      status: "PENDING",
+      total: server.total,
+      currency: hotel.currency,
     },
   });
 

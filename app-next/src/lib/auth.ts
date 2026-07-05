@@ -2,7 +2,7 @@ import { cookies } from "next/headers";
 import { redirect } from "next/navigation";
 import { createClient } from "@/lib/supabase/server";
 import { AuthenticationError, AuthorizationError } from "@/lib/errors";
-import { hasAnyRole } from "@/lib/rbac";
+import { hasAnyRole, can, type Permission } from "@/lib/rbac";
 import { hasFeature, type FeatureKey } from "@/lib/entitlements";
 import type {
   Membership,
@@ -98,6 +98,19 @@ export async function requireActiveContext(): Promise<ActiveContext> {
 /** Guard used inside Server Actions: throws when role is insufficient. */
 export function assertRole(role: UserRole, allowed: UserRole[]) {
   if (!hasAnyRole(role, allowed)) throw new AuthorizationError();
+}
+
+/**
+ * Page-level guard: resolves the active context and redirects to /dashboard
+ * when the current role lacks `permission`. Mirrors the sidebar filtering so a
+ * user can't reach a module by typing its URL directly.
+ */
+export async function requirePermission(
+  permission: Permission,
+): Promise<ActiveContext> {
+  const ctx = await requireActiveContext();
+  if (!can(ctx.membership.role, permission)) redirect("/dashboard");
+  return ctx;
 }
 
 /**

@@ -249,6 +249,18 @@ type SubscriptionRow = {
   updated_at: string;
 }
 
+type NotificationRow = {
+  id: string;
+  organization_id: string;
+  type: string;
+  title: string;
+  body: string | null;
+  entity: string | null;
+  entity_id: string | null;
+  metadata: Json;
+  read: boolean;
+  created_at: string;
+}
 type PlatformAdminRow = {
   profile_id: string;
   note: string | null;
@@ -347,6 +359,10 @@ export type Database = {
         AuditLogRow,
         "organization_id" | "action" | "entity"
       >;
+      notifications: TableShape<
+        NotificationRow,
+        "organization_id" | "title"
+      >;
       plans: TableShape<PlanRow, "code" | "name">;
       subscriptions: TableShape<
         SubscriptionRow,
@@ -395,6 +411,7 @@ export type Invoice = InvoiceRow;
 export type Payment = PaymentRow;
 export type HousekeepingTask = HousekeepingTaskRow;
 export type AuditLog = AuditLogRow;
+export type Notification = NotificationRow;
 export type Plan = PlanRow;
 export type Subscription = SubscriptionRow;
 export type CrmCompany = CrmCompanyRow;

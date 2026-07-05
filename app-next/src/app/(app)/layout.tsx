@@ -1,5 +1,6 @@
 import { getMemberships, requireActiveContext } from "@/lib/auth";
 import { AppShell } from "@/components/app-shell/app-shell";
+import { listNotifications } from "@/features/notifications/services";
 
 export default async function AppLayout({
   children,
@@ -7,7 +8,10 @@ export default async function AppLayout({
   children: React.ReactNode;
 }) {
   const ctx = await requireActiveContext();
-  const memberships = await getMemberships(ctx.userId);
+  const [memberships, notifications] = await Promise.all([
+    getMemberships(ctx.userId),
+    listNotifications(ctx.organization.id),
+  ]);
 
   const organizations = memberships.map((m) => ({
     id: m.organization_id,
@@ -20,7 +24,9 @@ export default async function AppLayout({
       userName={ctx.profile?.full_name ?? ctx.profile?.email ?? "User"}
       userEmail={ctx.profile?.email ?? ""}
       orgName={ctx.organization.name}
+      orgId={ctx.organization.id}
       organizations={organizations}
+      notifications={notifications}
     >
       {children}
     </AppShell>

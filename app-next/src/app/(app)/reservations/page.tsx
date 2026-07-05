@@ -1,20 +1,28 @@
-import { ComingSoon } from "@/components/coming-soon";
+import { requirePermission } from "@/lib/auth";
+import { can } from "@/lib/rbac";
+import { listReservations } from "@/features/reservations/services";
+import { BookingsTable } from "@/features/reservations/components/bookings-table";
+import { PageHeader } from "@/components/page-header";
 
-export const metadata = { title: "Reservations · HotelOS" };
+export const metadata = { title: "Bookings · HotelOS" };
 
-export default function ReservationsPage() {
+export default async function ReservationsPage() {
+  const ctx = await requirePermission("reservations:manage");
+  const reservations = await listReservations(ctx.organization.id);
+  const canManage = can(ctx.membership.role, "reservations:manage");
+
   return (
-    <ComingSoon
-      title="Reservations"
-      description="Manage bookings across every channel."
-      phase="Phase 2"
-      icon="calendar-check"
-      features={[
-        "Create & edit",
-        "Availability check",
-        "Calendar view",
-        "Status lifecycle",
-      ]}
-    />
+    <div className="space-y-5">
+      <PageHeader
+        title="Bookings"
+        description="Every reservation across your channels, updated in real time."
+      />
+      <BookingsTable
+        organizationId={ctx.organization.id}
+        currency={ctx.organization.currency}
+        reservations={reservations}
+        canManage={canManage}
+      />
+    </div>
   );
 }
